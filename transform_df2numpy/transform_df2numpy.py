@@ -225,27 +225,26 @@ class TransformDF2Numpy:
 
             if (col == self.objective_col) or (num_uniques == 1):
                 trans = Dropper()
-                self.variable_information = trans.fit_transform(df, col, self.variable_information,
-                                                                self.objective_col)
+                trans.fit_transform(df, col, self.variable_information,self.objective_col)
                 self.transforms.append(trans)
 
             elif (num_uniques > 2) and (not is_numeric):
                 trans = Factorizer(self.min_category_count, self.fillnan)
-                self.variable_information = trans.fit_transform(df, col, self.variable_information)
+                trans.fit_transform(df, col, self.variable_information)
                 self.transforms.append(trans)
                 categorical_transform_index.append(i)
 
             elif (num_uniques == 2) and (not is_numeric):
                 trans = BinaryFactorizer(self.numerical_scaling, self.scaling_robustness_factor,
                                          self.fillnan, self.fillnan_robustness_factor)
-                self.variable_information = trans.fit_transform(df, col, self.variable_information)
+                trans.fit_transform(df, col, self.variable_information)
                 self.transforms.append(trans)
                 numerical_transform_index.append(i)
 
             elif is_numeric:
                 trans = NumericalHandler(self.numerical_scaling, self.scaling_robustness_factor,
                                          self.fillnan, self.fillnan_robustness_factor)
-                self.variable_information = trans.fit_transform(df, col, self.variable_information)
+                trans.fit_transform(df, col, self.variable_information)
                 self.transforms.append(trans)
                 numerical_transform_index.append(i)
 
@@ -505,7 +504,6 @@ class Dropper:
         self.col_name = col_name
         if logging and (col_name != obj_col_name):
             _message_variable_dropped(col_name)
-        return variable_info
 
     def transform(self, df, col_name):
         if col_name != self.col_name:
@@ -531,8 +529,6 @@ class Factorizer:
         variable_info["categorical_variables"].append(col_name)
         self.num_uniques = len(self.dictionary)
         variable_info["categorical_uniques"].append(self.num_uniques)
-
-        return variable_info
 
     def transform(self, df, col_name):
         if col_name != self.col_name:
@@ -578,8 +574,6 @@ class BinaryFactorizer:
 
         variable_info["numerical_variables"].append(col_name)
 
-        return variable_info
-
     def transform(self, df, col_name):
         if col_name != self.col_name:
             raise WrongDataFrameConstructionError
@@ -617,8 +611,6 @@ class NumericalHandler:
             df[col_name] = (df[col_name].values - self.mean) / self.std
 
         variable_info["numerical_variables"].append(col_name)
-
-        return variable_info
 
     def transform(self, df, col_name):
         if col_name != self.col_name:
