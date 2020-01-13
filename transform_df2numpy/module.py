@@ -153,7 +153,7 @@ logging = True
 
 # global constants
 DROPPED_CATEGORY = "TransformDF2Numpy_dropped_category"
-NEW_CATEGORY = "TransformDF2Numpy_NaN_category"
+NAN_CATEGORY = "TransformDF2Numpy_NaN_category"
 
 
 class TransformDF2Numpy:
@@ -411,7 +411,7 @@ def _message_numerical_nans_filled(col_name, nan_count, nan_value):
 def _message_categirical_nans_filled(col_name, nan_count, factorized_nan_value):
     message = "Categorical NaNs filled with alternative value: (column: '%s'), " % col_name +\
               "(filled rows: %d, factorized value: %f, category: '%s')" %\
-              (nan_count, factorized_nan_value, NEW_CATEGORY)
+              (nan_count, factorized_nan_value, NAN_CATEGORY)
     print(message)
 
 
@@ -425,11 +425,12 @@ def _factorized_to_category(fixed_factorized, factorized, dictionary):
 def _fit_factorize_fillnan_true(df, col_name):
     nan_count = df[col_name].isnull().sum()
     if nan_count:
-        nan_value = NEW_CATEGORY         # nan will be replaced by new category
+        nan_value = NAN_CATEGORY         # nan will be replaced by new category
         df[col_name].fillna(nan_value, inplace=True)
         df[col_name], dictionary = df[col_name].factorize()
-        factorized_nan_value = np.where(dictionary == NEW_CATEGORY)[0][0]
-        _message_categirical_nans_filled(col_name, nan_count, factorized_nan_value)
+        factorized_nan_value = np.where(dictionary == NAN_CATEGORY)[0][0]
+        if logging:
+            _message_categirical_nans_filled(col_name, nan_count, factorized_nan_value)
     else:
         nan_value = df[col_name].mode()[0]      # future nan will be replaced by most frequently appeared category
         df[col_name], dictionary = df[col_name].factorize()
