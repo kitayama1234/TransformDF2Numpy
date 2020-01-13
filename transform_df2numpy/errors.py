@@ -41,5 +41,8 @@ class WrongDataFrameConstructionError(ValueError):
         super(ValueError, self).__init__("Could not transform. DataFrame construction is wrong.")
 
 
+class NoCategoricalVariableError(ValueError):
+    def __init__(self) -> None:
+        super(ValueError, self).__init__("Input contains no categorical variable")
 
 

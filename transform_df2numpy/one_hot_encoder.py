@@ -4,10 +4,15 @@ from .errors import *
 
 
 def one_hot_encode(transformer, data):
+    if not transformer.categorical_variables():
+        raise NoCategoricalVariableError
+
     names = []
-    for index, c_var in enumerate(transformer.categorical_variables()):
+    for index, var_name in enumerate(transformer.categorical_variables()):
+        # one hot encoding
         temp = np.identity(transformer.nunique(index))[list(data[:, index].astype(np.int))]
-        # nan handling
+
+        # nan (factorized value: -1) handling
         if (data[:, index] == -1).sum():
             drop_target_indices = list(np.where(data[:, index] == -1)[0])
             temp[drop_target_indices, -1] = 0.
@@ -18,7 +23,7 @@ def one_hot_encode(transformer, data):
             temp = (temp - fac.categories_one_hot_means) / fac.categories_one_hot_stds
 
         # create variable names like ["variable_category1", "variable_category2", ...]
-        heads = np.array([transformer.index_to_name(index) + "_"] * len(transformer.categories(index)))
+        heads = np.array([var_name + "_"] * len(transformer.categories(index)))
         names += list(np.core.defchararray.add(heads, list(transformer.categories(index))))
 
         # make one-hot array
