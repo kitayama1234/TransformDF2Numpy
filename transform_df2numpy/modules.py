@@ -529,8 +529,20 @@ class Factorizer:
         self.num_uniques = len(self.categories)
         variable_info["categorical_uniques"].append(self.num_uniques)
 
-        # params used for one-hot-encoding (an external function)
-        self.category_counts_when_fit_transform = df[col_name].value_counts().sort_index().values
+        # starting to create params used for an external one-hot-encoding function
+        category_counts = df[col_name].value_counts()
+        if -1 in category_counts.index.values:
+            category_counts.drop(-1, axis=0, inplace=True)
+        category_counts = category_counts.sort_index().values
+
+        # means of one-hot-vectors
+        self.categories_one_hot_means = category_counts / category_counts.sum()
+
+        # standard deviations of one-hot-vectors
+        self.categories_one_hot_stds = np.sqrt(
+            self.categories_one_hot_means * (1 - self.categories_one_hot_means) ** 2 +
+            (1 - self.categories_one_hot_means) * self.categories_one_hot_means ** 2
+        )
 
     def transform(self, df, col_name):
         if col_name != self.col_name:
