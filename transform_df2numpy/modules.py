@@ -1,9 +1,4 @@
-import pandas as pd
-import numpy as np
-import warnings
-from .errors import *
-
-'''
+"""
 TransformDF2Numpy is a simple tool for quick transformation from pandas.DataFrame to numpy.array dataset,
 containing some utilities such as re-transformation of new data,
 minimal pre-processing, and access to variable information.
@@ -76,62 +71,60 @@ minimal pre-processing, and access to variable information.
 #################
 
     fit_transform(self, df)
-              Input:   training set of DataFrame
-             Return:   x, (y)
+             Inputs:   training set of DataFrame
+            Returns:   x, (y)
                        x : The numpy.array containing factorized (*) categorical variables (first half)
                            and numerical variables (second half).
                            The variables which have only two unique categories are treated as numerical variables.
                        y : numpy array of objective variable (returned only when objective column exists)
 
     transform(self, df)
-              Input:   testing set of DataFrame
-             Return:   x, (y)
+             Inputs:   testing set of DataFrame
+            Returns:   x, (y)
                        x : numpy array of explanatory variables same as fit_transform()
                        y : numpy array of objective variable (only when objective column exists)
 
     variables(self)
-             Return:  the list of the name of all variables in order of the output numpy array
+            Returns:  the list of the name of all variables in order of the output numpy array
     
     categorical_variables(self)
-             Return:  the list of the name of categorical variables in order of the output numpy array
+            Returns:  the list of the name of categorical variables in order of the output numpy array
 
     numerical_variables(self)
-             Return:  the list of the name of numerical variables in order of the output numpy array
+            Returns:  the list of the name of numerical variables in order of the output numpy array
 
     name_to_index(self, colname)
-              Input:   column name of DataFrame
-             Return:   the corresponding column index of numpy array
+             Inputs:   column name of DataFrame
+            Returns:   the corresponding column index of numpy array
 
     index_to_name(self, index)
-              Input:   column index of numpy array
-             Return:   the corresponding column name of DataFrame
+             Inputs:   column index of numpy array
+            Returns:   the corresponding column name of DataFrame
 
     is_numerical(self, index_or_colname)
-              Input:   column index of numpy array
-             Return:   the bool indicating whether the variable is treated as a numerical variable or not
+             Inputs:   column index of numpy array
+            Returns:   the bool indicating whether the variable is treated as a numerical variable or not
 
-    dictionary(self, index_or_colname)
-              Input:   column name of DataFrame, or column index of numpy array
+    categories(self, index_or_colname)
+             Inputs:   column name of DataFrame, or column index of numpy array
              Return:   the list of unique categories in the variable which index correspond to the factorized values
 
     category_to_factorized(self, index_or_colname, category_name):
-              Input:
-                       index_or_colname : column name of DataFrame, or column index of numpy array
-                          category_name : name of the single category
-             Return:   the factorized value
+             Inputs:     index_or_colname : column name of DataFrame, or column index of numpy array
+                            category_name : name of the single category
+            Returns:   the factorized value
 
     factorized_to_category(self, index_or_colname, factorized_value):
-              Input:
-                       index_or_colname : column name of DataFrame, or column index of numpy array
-                       factorized_value : factorized value of the single category
-             Return:   the name of the single category
+             Inputs:     index_or_colname : column name of DataFrame, or column index of numpy array
+                         factorized_value : factorized value of the single category
+            Returns:   the name of the single category
 
     nuniques(self)
-             Return:   the list of the number of unique categories of the categorical variables
+            Returns:   the list of the number of unique categories of the categorical variables
 
     nunique(self, index_or_colname)
-              Input:   column name of DataFrame, or column index of numpy array
-             Return:   the number of unique categories of the categorical variable
+             Inputs:   column name of DataFrame, or column index of numpy array
+            Returns:   the number of unique categories of the categorical variable
 
 ####################
 ###  Attributes  ###
@@ -145,8 +138,13 @@ minimal pre-processing, and access to variable information.
     
       self.num_numericals   :  the number of the numerical variables
 
+"""
 
-'''
+import pandas as pd
+import numpy as np
+import warnings
+from .errors import *
+
 
 # global parameters
 logging = True
@@ -225,7 +223,7 @@ class TransformDF2Numpy:
 
             if (col == self.objective_col) or (num_uniques == 1):
                 trans = Dropper()
-                trans.fit_transform(df, col, self.variable_information,self.objective_col)
+                trans.fit_transform(col, self.objective_col)
                 self.transforms.append(trans)
 
             elif (num_uniques > 2) and (not is_numeric):
@@ -308,33 +306,33 @@ class TransformDF2Numpy:
         else:
             return True
 
-    def dictionary(self, index_or_colname):
+    def categories(self, index_or_colname):
         trans = self._get_transform(index_or_colname)
         if type(trans) in [Factorizer, BinaryFactorizer]:
-            return trans.dictionary
+            return trans.categories
         else:
             raise HasNoDictionaryError
 
     def category_to_factorized(self, index_or_colname, category_name):
         trans = self._get_transform(index_or_colname)
-        dictionary = self.dictionary(index_or_colname)
-        if category_name not in dictionary:
+        categories = self.categories(index_or_colname)
+        if category_name not in categories:
             raise CategoryNotExistError(category_name)
         if type(trans) == Factorizer:
-            return float(np.where(dictionary == category_name)[0][0])
+            return float(np.where(categories == category_name)[0][0])
         elif type(trans) == BinaryFactorizer:
-            dictionary = self.dictionary(index_or_colname)
+            categories = self.categories(index_or_colname)
             if self.numerical_scaling:
-                return float((np.where(dictionary == category_name)[0][0] - trans.mean) / trans.std)
+                return float((np.where(categories == category_name)[0][0] - trans.mean) / trans.std)
             else:
-                return float(np.where(dictionary == category_name)[0][0])
+                return float(np.where(categories == category_name)[0][0])
 
     def factorized_to_category(self, index_or_colname, factorized_value):
         trans = self._get_transform(index_or_colname)
-        dictionary = self.dictionary(index_or_colname)
+        categories = self.categories(index_or_colname)
 
         if type(trans) == Factorizer:
-            return _factorized_to_category(factorized_value, factorized_value, dictionary)
+            return _factorized_to_category(factorized_value, factorized_value, categories)
 
         elif type(trans) == BinaryFactorizer:
             if self.numerical_scaling:
@@ -342,9 +340,9 @@ class TransformDF2Numpy:
                 # if not integer, raise error
                 if not float.is_integer(fixed_factorized_value):
                     raise FactorizedNotExistError(factorized_value)
-                return _factorized_to_category(fixed_factorized_value, factorized_value, dictionary)
+                return _factorized_to_category(fixed_factorized_value, factorized_value, categories)
             else:
-                return _factorized_to_category(factorized_value, factorized_value, dictionary)
+                return _factorized_to_category(factorized_value, factorized_value, categories)
 
     def nuniques(self):
         return self.variable_information["categorical_uniques"]
@@ -415,9 +413,9 @@ def _message_categirical_nans_filled(col_name, nan_count, factorized_nan_value):
     print(message)
 
 
-def _factorized_to_category(fixed_factorized, factorized, dictionary):
-    if fixed_factorized < len(dictionary):
-        return dictionary[fixed_factorized]
+def _factorized_to_category(fixed_factorized, factorized, categories):
+    if fixed_factorized < len(categories):
+        return categories[fixed_factorized]
     else:
         raise FactorizedNotExistError(factorized)
 
@@ -427,19 +425,19 @@ def _fit_factorize_fillnan_true(df, col_name):
     if nan_count:
         nan_value = NAN_CATEGORY         # nan will be replaced by new category
         df[col_name].fillna(nan_value, inplace=True)
-        df[col_name], dictionary = df[col_name].factorize()
-        factorized_nan_value = np.where(dictionary == NAN_CATEGORY)[0][0]
+        df[col_name], categories = df[col_name].factorize()
+        factorized_nan_value = np.where(categories == NAN_CATEGORY)[0][0]
         if logging:
             _message_categirical_nans_filled(col_name, nan_count, factorized_nan_value)
     else:
         nan_value = df[col_name].mode()[0]      # future nan will be replaced by most frequently appeared category
-        df[col_name], dictionary = df[col_name].factorize()
-    return dictionary, nan_value
+        df[col_name], categories = df[col_name].factorize()
+    return categories, nan_value
 
 
 def _fit_factorize_fillnan_false(df, col_name):
-    df[col_name], dictionary = df[col_name].factorize()
-    return dictionary
+    df[col_name], categories = df[col_name].factorize()
+    return categories
 
 
 def _numerical_nan_value(values, fillnan_robustness_factor):
@@ -501,7 +499,7 @@ class Dropper:
     def __init__(self):
         pass
 
-    def fit_transform(self, df, col_name, variable_info, obj_col_name):
+    def fit_transform(self, col_name, obj_col_name):
         self.col_name = col_name
         if logging and (col_name != obj_col_name):
             _message_variable_dropped(col_name)
@@ -523,13 +521,16 @@ class Factorizer:
         self.ct.fit_transform(df, col_name, min_count=self.min_category_count)
 
         if self.fillnan_flag:
-            self.dictionary, self.nan_value = _fit_factorize_fillnan_true(df, col_name)
+            self.categories, self.nan_value = _fit_factorize_fillnan_true(df, col_name)
         else:
-            self.dictionary = _fit_factorize_fillnan_false(df, col_name)
+            self.categories = _fit_factorize_fillnan_false(df, col_name)
 
         variable_info["categorical_variables"].append(col_name)
-        self.num_uniques = len(self.dictionary)
+        self.num_uniques = len(self.categories)
         variable_info["categorical_uniques"].append(self.num_uniques)
+
+        # params used for one-hot-encoding (an external function)
+        self.category_counts_when_fit_transform = df[col_name].value_counts().sort_index().values
 
     def transform(self, df, col_name):
         if col_name != self.col_name:
@@ -539,7 +540,7 @@ class Factorizer:
         if self.fillnan_flag:
             df[col_name].fillna(self.nan_value, inplace=True)
 
-        df[col_name] = self.dictionary.get_indexer(df[col_name])
+        df[col_name] = self.categories.get_indexer(df[col_name])
 
 
 class BinaryFactorizer:
@@ -553,7 +554,7 @@ class BinaryFactorizer:
     def fit_transform(self, df, col_name, variable_info):
         self.col_name = col_name
 
-        df[col_name], self.dictionary = df[col_name].factorize()
+        df[col_name], self.categories = df[col_name].factorize()
 
         # fill nan
         nan_count = (df[col_name].values == -1).sum()
@@ -579,7 +580,7 @@ class BinaryFactorizer:
         if col_name != self.col_name:
             raise WrongDataFrameConstructionError
 
-        df[col_name] = self.dictionary.get_indexer(df[col_name])
+        df[col_name] = self.categories.get_indexer(df[col_name])
         if self.fillnan_flag and (-1 in df[col_name].values):
             df.loc[df[col_name] == -1, col_name] = self.nan_value
         elif not self.fillnan_flag and (-1 in df[col_name].values):

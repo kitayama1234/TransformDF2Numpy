@@ -6,7 +6,7 @@ from transform_df2numpy import TransformDF2Numpy, NAN_CATEGORY, DROPPED_CATEGORY
 from transform_df2numpy.errors import *
 
 
-transform_df2numpy.module.logging = False
+transform_df2numpy.modules.logging = False
 
 
 # method test
@@ -340,31 +340,31 @@ class TestTransformDF2Numpy(unittest.TestCase):
         with self.assertRaises(InvalidInputForSpecifyingVariableError):
             t.is_numerical(1.)
 
-    # TODO: dictionary
-    def test_dictionary(self):
+    # TODO: categories
+    def test_categories(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
         x = t.fit_transform(self.df)
 
         # invalid input type 1: float
         with self.assertRaises(InvalidInputForSpecifyingVariableError):
-            t.dictionary(0.)
+            t.categories(0.)
 
         # invalid input type 2: list
         with self.assertRaises(InvalidInputForSpecifyingVariableError):
-            t.dictionary([0])
+            t.categories([0])
 
-        # the variable has no dictionary
+        # the variable has no categories
         with self.assertRaises(HasNoDictionaryError):
-            t.dictionary(5)
+            t.categories(5)
         with self.assertRaises(HasNoDictionaryError):
-            t.dictionary("B")
+            t.categories("B")
 
         # output check
-        self.assertListEqual(list(t.dictionary(0)), ['Aa', DROPPED_CATEGORY, 'Ac'])
-        self.assertListEqual(list(t.dictionary("D")), ['Da', 'Db', 'Dc', NAN_CATEGORY])
-        self.assertListEqual(list(t.dictionary("C")), ['Ca', 'Cc'])
-        self.assertListEqual(list(t.dictionary("F")), ['Fa', 'Fb', 'Fc', 'Fd'])
+        self.assertListEqual(list(t.categories(0)), ['Aa', DROPPED_CATEGORY, 'Ac'])
+        self.assertListEqual(list(t.categories("D")), ['Da', 'Db', 'Dc', NAN_CATEGORY])
+        self.assertListEqual(list(t.categories("C")), ['Ca', 'Cc'])
+        self.assertListEqual(list(t.categories("F")), ['Fa', 'Fb', 'Fc', 'Fd'])
 
     # TODO: category_to_factorized(self, index_or_colname, category_name):
     # CategoryNotExistError
