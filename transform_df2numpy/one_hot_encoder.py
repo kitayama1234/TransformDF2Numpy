@@ -4,11 +4,11 @@ from .errors import *
 
 
 def one_hot_encode(transformer, data):
-    if not transformer.categorical_variables():
+    if not transformer.categoricals():
         raise NoCategoricalVariableError
 
     names = []
-    for index, var_name in enumerate(transformer.categorical_variables()):
+    for index, var_name in enumerate(transformer.categoricals()):
         # one hot encoding
         temp = np.identity(transformer.nunique(index))[list(data[:, index].astype(np.int))]
 
@@ -33,7 +33,7 @@ def one_hot_encode(transformer, data):
             one_hot_array = np.concatenate([temp, one_hot_array], axis=1)
 
     out = np.concatenate([one_hot_array, data[:, transformer.num_categoricals:]], axis=1)
-    out_names = names + transformer.numerical_variables()
+    out_names = names + transformer.numericals()
 
     return out, out_names
 

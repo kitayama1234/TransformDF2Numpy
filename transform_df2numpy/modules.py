@@ -87,10 +87,10 @@ minimal pre-processing, and access to variable information.
     variables(self)
             Returns:  the list of the name of all variables in order of the output numpy array
     
-    categorical_variables(self)
+    categoricals(self)
             Returns:  the list of the name of categorical variables in order of the output numpy array
 
-    numerical_variables(self)
+    numericals(self)
             Returns:  the list of the name of numerical variables in order of the output numpy array
 
     name_to_index(self, colname)
@@ -285,10 +285,10 @@ class TransformDF2Numpy:
     def variables(self):
         return self.variable_information["variables"]
 
-    def categorical_variables(self):
+    def categoricals(self):
         return self.variable_information["categorical_variables"]
 
-    def numerical_variables(self):
+    def numericals(self):
         return self.variable_information["numerical_variables"]
 
     def name_to_index(self, colname):
