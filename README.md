@@ -54,8 +54,8 @@ from transform_df2numpy import TransformDF2Numpy, one_hot_encode
 ###  Training data  ###
 #######################
 
-# load data
-df_train = pd.load_csv('some_path/train_data.csv')
+# read data
+df_train = pd.read_csv('some_path/train_data.csv')
 
 # initializing a transformer instance
 transformer = TransformDF2Numpy(objective_col='price',
@@ -75,8 +75,8 @@ x_train_one_hot, variable_names = one_hot_encode(transformer, x_train)
 ###  Testing data  ###
 ######################
 
-# load data
-df_test = pd.load_csv('some_path/test_data.csv')
+# read data
+df_test = pd.read_csv('some_path/test_data.csv')
 
 # apply the transformer to test data
 x_test = transformer.transform(df_test)   # The df_test can be transformed whether the objective column is contained or not.
