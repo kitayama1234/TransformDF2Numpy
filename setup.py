@@ -4,8 +4,8 @@ readme = './README.md'
 license = './LICENSE'
 
 setup(
-    name="transform_df2numpy",
-    version="0.0.1",
+    name="transformdf2numpy",
+    version="1.0.0",
     description="A simple tool for quick transformation from pandas.DataFrame to numpy.array dataset containing some utilities",
     long_description=readme,
     author="Masaki Kitayama",
