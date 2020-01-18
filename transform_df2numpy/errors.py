@@ -46,3 +46,14 @@ class NoCategoricalVariableError(ValueError):
         super(ValueError, self).__init__("Input contains no categorical variable")
 
 
+class InvalidNumpyArrayShapeError(ValueError):
+    def __init__(self) -> None:
+        super(ValueError, self).__init__("Invalid shape of numpy array")
+
+
+class InvalidNumpyArrayColumnsError(ValueError):
+    def __init__(self) -> None:
+        super(ValueError, self).__init__("Number of variables in the input numpy array and the transformer does not match")
+
+
+
