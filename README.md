@@ -58,13 +58,18 @@ from transform_df2numpy import TransformDF2Numpy, one_hot_encode
 df_train = pd.load_csv('some_path/train_data.csv')
 
 # initializing a transformer instance
-transformer = TransformDF2Numpy(objective_col='price or something', fillnan=True, numerical_scaling=True, min_category_count=3)
+transformer = TransformDF2Numpy(objective_col='price or something',
+                                objective_scaling=True,
+                                fillnan=True,
+                                numerical_scaling=True,
+                                min_category_count=3)
 
 # fit a transformer, get the numpy.arrays
 x_train, y_train = transformer.fit_transform(df_train)
 
 # (one hot encoding)
 x_train_one_hot, variable_names = one_hot_encode(transformer, x_train)
+
 
 ######################
 ###  Testing data  ###
@@ -79,25 +84,36 @@ x_test = transformer.transform(df_test)   # The df_test can be transformed wheth
 # (one hot encoding)
 x_test_one_hot = one_hot_encode(transformer, x_test)[0]
 
-#########################################
-###  Access to variables information  ###
-#########################################
+
+#############################################
+###  Access to the variables information  ###
+#############################################
 
 # names of the variables in the order
-print(transformer.variables())
-print(transformer.categoricals())
-print(transformer.numericals())
+print(transformer.variables())      # out: ['animal_type', 'shop_type', 'weights', 'distance_from_a_station', 'is_a_pedigree']
+print(transformer.categoricals())   # out: ['animal_type', 'shop_type']
+print(transformer.numericals())     # out: [''weights', 'distance_from_a_station', 'is_a_pedigree']
+
+# variable type
+print(transformer.is_numerical('is_a_pedigree'))   # out: True  (because it's a flag variable with only 2 categories)
 
 # name-index link
 print(transformer.name_to_index('animal_type'))  # out: 0
 print(transformer.index_to_name(0))              # out: 'animal_type'
 
 # categories of a categorical variable
-print(transformer.categories('animal_type'))   # transformer.categories('animal_type') is also OK.
+print(transformer.categories('animal_type'))   # (transformer.categories(0) is also OK.)
 
 # category-factorized link
 print(transformer.category_to_factorized('animal_type', 'dog'))  # out: 2.
-print(transformer.factorized_to_category('animal_type', 2.))     # out: 'dog'
+print(transformer.factorized_to_category(0, 2.))                 # out: 'dog'
+
+# number of unique categories
+print(transformer.nuniques())               # out: [3, 4]
+print(transformer.nunique('animal_type'))   # out: 3
+
+# re-scaling of the objective variable
+original_y_train = y_train * transformer.y_std + transformer.y_mean
 
 ```
 
@@ -153,70 +169,110 @@ print(transformer.factorized_to_category('animal_type', 2.))     # out: 'dog'
 
 ## Methods
 
-    fit_transform(df)
-             Inputs:   training set of DataFrame
-            Returns:   x, (y)
-                       x : The numpy.array containing factorized categorical variables (first half)
-                           and numerical variables (second half).
-                           The variables which have only two unique categories are treated as numerical variables.
-                       y : numpy array of objective variable (returned only when objective column exists)
+#### ```fit_transform(df)```
+- *Inputs*: ```df```
+> training set of DataFrame  
 
-    transform(df)
-             Inputs:   testing set of DataFrame
-            Returns:   x, (y)
-                       x : numpy array of explanatory variables same as fit_transform()
-                       y : numpy array of objective variable (only when objective column exists)
+- *Returns*: ```x```, (```y```)
+> ```x``` : The numpy.array containing factorized categorical variables (first half)
+> and numerical variables (second half).
+> The variables which have only two unique categories are treated as numerical variables.  
 
-    variables()
-            Returns:  the list of the name of all variables in order of the output numpy array
+> ```y``` : numpy array of objective variable (returned only when objective column exists)
+
+> The transformer instance will be fitted by the df.
+
+#### ```transform(df)```
+- *Inputs*: ```df```
+> testing set of DataFrame  
+
+- *Returns*:   ```x```, (```y```)
+> ```x``` : numpy array of explanatory variables same as fit_transform()  
+
+> ```y``` : numpy array of objective variable (only when objective column exists)
+
+#### ```variables()```
+- *Returns*:
+> the list of the name of all variables in order of the output numpy array
     
-    categoricals()
-            Returns:  the list of the name of categorical variables in order of the output numpy array
+#### ```categoricals()```
+- *Returns*:
+> the list of the name of categorical variables in order of the output numpy array
 
-    numericals()
-            Returns:  the list of the name of numerical variables in order of the output numpy array
+#### ```numericals()```
+- *Returns*:
+> the list of the name of numerical variables in order of the output numpy array
 
-    name_to_index(colname)
-             Inputs:   column name of DataFrame
-            Returns:   the corresponding column index of numpy array
+#### ```name_to_index(colname)```
+- *Inputs*:
+> column name of DataFrame  
 
-    index_to_name(index)
-             Inputs:   column index of numpy array
-            Returns:   the corresponding column name of DataFrame
+- *Returns*:
+> the corresponding column index of numpy array
 
-    is_numerical(index_or_colname)
-             Inputs:   column index of numpy array
-            Returns:   the bool indicating whether the variable is treated as a numerical variable or not
+#### ```index_to_name(index)```
+- *Inputs*:
+> column index of numpy array  
 
-    categories(index_or_colname)
-             Inputs:   column name of DataFrame, or column index of numpy array
-             Return:   the list of unique categories in the variable which index correspond to the factorized values
+- *Returns*:
+> the corresponding column name of DataFrame
 
-    category_to_factorized(index_or_colname, category_name):
-             Inputs:     index_or_colname : column name of DataFrame, or column index of numpy array
-                            category_name : name of the single category
-            Returns:   the factorized value
+#### ```is_numerical(index_or_colname)```
+- *Inputs*:
+> column index of numpy array  
 
-    factorized_to_category(index_or_colname, factorized_value):
-             Inputs:     index_or_colname : column name of DataFrame, or column index of numpy array
-                         factorized_value : factorized value of the single category
-            Returns:   the name of the single category
+- *Returns*:
+> the bool indicating whether the variable is treated as a numerical variable or not
 
-    nuniques()
-            Returns:   the list of the number of unique categories of the categorical variables
+#### ```categories(index_or_colname)```
+- *Inputs*:
+> column name of DataFrame, or column index of numpy array  
 
-    nunique(index_or_colname)
-             Inputs:   column name of DataFrame, or column index of numpy array
-            Returns:   the number of unique categories of the categorical variable
+- *Returns*:
+> the list of unique categories in the variable which index correspond to the factorized values
+
+#### ```category_to_factorized(index_or_colname, category_name)```
+- *Inputs*: ```index_or_colname```, ```category_name```
+> ```index_or_colname``` : column name of DataFrame, or column index of numpy array  
+
+> ```category_name``` : name of the single category  
+
+- *Returns*:
+> the factorized value
+
+#### ```factorized_to_category(index_or_colname, factorized_value)```
+- *Inputs*: ```index_or_colname```, ```factorized_value```
+> ```index_or_colname``` : column name of DataFrame, or column index of numpy array  
+
+> ```factorized_value``` : factorized value of the single category  
+
+- *Returns*:
+> the name of the single category
+
+#### ```nuniques()```
+- *Returns*:
+> the list of the number of unique categories of the categorical variables
+
+#### ```nunique(index_or_colname)```
+- *Returns*:
+> column name of DataFrame, or column index of numpy array  
+
+- *Returns*:
+> the number of unique categories of the categorical variable
 
 
 ## Attributes
 
-              self.y_mean   :  the mean of the objective variable before scaling
+#### ```y_mean```
+> the mean of the objective variable before scaling  
     
-               self.y_std   :  the standard deviation of the objective variable before scaling
+#### ```y_std```
+> the standard deviation of the objective variable before scaling  
     
-    self.num_categoricals   :  the number of the categorical variables
+#### ```num_categoricals```
+the number of the categorical variables  
     
-      self.num_numericals   :  the number of the numerical variables
+#### ```num_numericals```
+> the number of the numerical variables  
+
 ***
