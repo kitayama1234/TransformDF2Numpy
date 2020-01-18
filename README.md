@@ -43,7 +43,7 @@ This returns one-hot-encoded numpy.array and the list of varaible names.
 > (*) **Factorization**: The process of converting each element of a categorical variable into a corresponding positive index.
 
 ## Basic Usage
-See demos for more detailed examples.
+
 ```python
 import numpy as np
 import pandas as pd
@@ -119,6 +119,7 @@ original_y_train = y_train * transformer.y_std + transformer.y_mean
 
 ***
 # TransformDF2Numpy
+The documentation of the class ```transform_df2numpy.TransformDF2Numpy```
 
 ## Parameters
 
