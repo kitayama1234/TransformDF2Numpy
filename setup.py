@@ -11,7 +11,7 @@ setup(
     author="Masaki Kitayama",
     author_email="kitayama-masaki@ed.tmu.ac.jp",
     install_requires=['numpy', 'pandas'],
-    url='',
+    url='https://github.com/kitayama1234/TransformDF2Numpy',
     license=license,
     package=find_packages()
 )
