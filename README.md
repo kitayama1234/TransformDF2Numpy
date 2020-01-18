@@ -36,7 +36,7 @@ This returns one-hot-encoded numpy.array and the list of varaible names.
         - mean value for numerical variables
         - robustness control by a parameter　　
 
-- *Optional one-hot-encoding by a function ```one_hot_encode```*
+- *Optional one-hot-encoding by a function* ```one_hot_encode```
 
 > (*) Note that a categorical variable which has only two unique categories is treated as a numerical variable.
 
@@ -270,7 +270,7 @@ original_y_train = y_train * transformer.y_std + transformer.y_mean
 > the standard deviation of the objective variable before scaling  
     
 #### ```num_categoricals```
-the number of the categorical variables  
+> the number of the categorical variables  
     
 #### ```num_numericals```
 > the number of the numerical variables  
