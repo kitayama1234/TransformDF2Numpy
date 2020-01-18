@@ -124,7 +124,7 @@ original_y_train = y_train * transformer.y_std + transformer.y_mean
 
 ####  ```objective_col```
 -  *str (optional, default None)*  
-  -  The column name of objective variable.
+  - The column name of objective variable.
   If you specify this, the instance automatically find the column and the output numpy array will be splitted into x (explanatory variables) and y (objective variables).
   
 #### ```objective_scaling```
