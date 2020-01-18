@@ -241,7 +241,7 @@ and treated as a new single category.
   - the list of the number of unique categories of the categorical variables
 
 #### ```nunique(index_or_colname)```
-- *Returns*: ```index_or_colname```  
+- *Inputs*: ```index_or_colname```  
   - column name of DataFrame, or column index of numpy array  
 
 - *Returns*:  
