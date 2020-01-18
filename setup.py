@@ -13,7 +13,7 @@ setup(
     install_requires=['numpy', 'pandas'],
     url='https://github.com/kitayama1234/TransformDF2Numpy',
     license=license,
-    package=find_packages()
+    packages=find_packages()
 )
 
 
