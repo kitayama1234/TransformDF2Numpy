@@ -58,7 +58,7 @@ from transform_df2numpy import TransformDF2Numpy, one_hot_encode
 df_train = pd.load_csv('some_path/train_data.csv')
 
 # initializing a transformer instance
-transformer = TransformDF2Numpy(objective_col='price or something',
+transformer = TransformDF2Numpy(objective_col='price',
                                 objective_scaling=True,
                                 fillnan=True,
                                 numerical_scaling=True,
