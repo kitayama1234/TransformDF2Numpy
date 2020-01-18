@@ -195,6 +195,8 @@ class TransformDF2Numpy:
         self.min_category_count = min_category_count
 
     def fit_transform(self, df):
+        df = df.copy()
+
         _start_message_fit_transform() if logging else None
 
         if self.objective_col:
@@ -272,6 +274,8 @@ class TransformDF2Numpy:
         return (x, y) if self.objective_col else x
 
     def transform(self, df):
+        df = df.copy()
+
         if len(df.columns) != len(self.transforms):
             raise WrongDataFrameConstructionError
 
