@@ -123,39 +123,39 @@ original_y_train = y_train * transformer.y_std + transformer.y_mean
 ## Parameters
 
 ####  ```objective_col```
--  *str (optional, default None)*  
-  - The column name of objective variable.
-  If you specify this, the instance automatically find the column and the output numpy array will be splitted into x (explanatory variables) and y (objective variables).
+- *str (optional, default None)*  
+- The column name of objective variable.
+If you specify this, the instance automatically find the column and the output numpy array will be splitted into x (explanatory variables) and y (objective variables).
   
 #### ```objective_scaling```
 - *bool (optional, default False)* 
-  - The flag for scaling objective variable.
+- The flag for scaling objective variable.
   
 #### ```numerical_scaling```
 - *bool (optional, default False)* 
-  - The flag for scaling numerical variables.
+- The flag for scaling numerical variables.
   
 #### ```scaling_robustness_factor```
 - *float in range of [0. 1.] (optional, default 0.)*  
-  - The parameter to control robustness of scaling operation. Specifying a larger value will make it more robust against outliers.
+- The parameter to control robustness of scaling operation. Specifying a larger value will make it more robust against outliers.
    
 #### ```fillnan```
 - *bool (optional, default True)*  
-  - The flag to fill missing values (nan, NaN). If True, the numerical nan will be filled with the mean,
-  and the categorical nan will be filled as new category (or most frequent category).
-  If False, the numerical nan will not be filled,
-  and the categorical nan will be filled with -1.
+- The flag to fill missing values (nan, NaN). If True, the numerical nan will be filled with the mean,
+and the categorical nan will be filled as new category (or most frequent category).
+If False, the numerical nan will not be filled,
+and the categorical nan will be filled with -1.
   
 #### ```fillnan_robustness_factor```
 - *float in range of [0. 1.] (optional, default 0.)*  
-  - The parameter to control robustness of calculating the filling value to nan.
-  Specifying a larger value will make it more robust against outliers.
+- The parameter to control robustness of calculating the filling value to nan.
+Specifying a larger value will make it more robust against outliers.
   
 #### ```min_category_count```
 - *integer (optional, default 0)*  
-  - The minimum number of appearance of each category, in each categorical variable.
-  The categories with a number of appearance below this parameter will be thresholded,
-  and treated as a new single category.
+- The minimum number of appearance of each category, in each categorical variable.
+The categories with a number of appearance below this parameter will be thresholded,
+and treated as a new single category.
   
 
 ## Methods
