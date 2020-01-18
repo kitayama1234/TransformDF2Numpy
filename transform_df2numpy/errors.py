@@ -41,19 +41,27 @@ class WrongDataFrameConstructionError(ValueError):
         super(ValueError, self).__init__("Could not transform. DataFrame construction is wrong.")
 
 
+class InvalidTransformerError(ValueError):
+    def __init__(self) -> None:
+        super(ValueError, self).__init__("The first argument must be a instance of the TransformDF2Numpy class.")
+
+
 class NoCategoricalVariableError(ValueError):
     def __init__(self) -> None:
-        super(ValueError, self).__init__("Input contains no categorical variable")
+        message = "According to the information of the transformer, the data contains no categorical variable."
+        super(ValueError, self).__init__(message)
 
 
 class InvalidNumpyArrayShapeError(ValueError):
     def __init__(self) -> None:
-        super(ValueError, self).__init__("Invalid shape of numpy array")
+        super(ValueError, self).__init__("The shape of input numpy array must be (rows, columns).")
 
 
 class InvalidNumpyArrayColumnsError(ValueError):
     def __init__(self) -> None:
-        super(ValueError, self).__init__("Number of variables in the input numpy array and the transformer does not match")
+        message = "The number of columns in the input numpy array does not match "\
+                  + "the number of variables from the transformer's information."
+        super(ValueError, self).__init__(message)
 
 
 

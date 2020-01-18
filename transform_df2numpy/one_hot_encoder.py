@@ -1,8 +1,12 @@
 import numpy as np
 from .errors import *
+from .modules import TransformDF2Numpy
 
 
 def one_hot_encode(transformer, numpy_array):
+    if type(transformer) != TransformDF2Numpy:
+        raise InvalidTransformerError
+
     if not transformer.categoricals():
         raise NoCategoricalVariableError
 
@@ -16,6 +20,7 @@ def one_hot_encode(transformer, numpy_array):
     num_vars = sum(transformer.nuniques()) + transformer.num_numericals
     out = np.zeros([numpy_array.shape[0], num_vars])
 
+    # one hot creation loop
     start_index = 0
     names = []
     for category_index, var_name in enumerate(transformer.categoricals()):
@@ -42,7 +47,7 @@ def one_hot_encode(transformer, numpy_array):
         start_index = end_index
 
     out[:, end_index:] = numpy_array[:, transformer.num_categoricals:]
-    out_names = names + transformer.numericals()
+    var_names = names + transformer.numericals()
 
-    return out, out_names
+    return out, var_names
 

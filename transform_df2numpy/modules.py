@@ -3,11 +3,12 @@ TransformDF2Numpy is a simple tool for quick transformation from pandas.DataFram
 containing some utilities such as re-transformation of new data,
 minimal pre-processing, and access to variable information.
 
+
 ##################
 ###  Overview  ###
 ##################
 
-    + Transform a training set of DataFrame to a numpy.array dataset, and fit a transformer instance.
+    + Transform a training set of the pandas.DataFrame to a numpy.array dataset, and fit a transformer instance.
       The numpy.array containing the factorized categorical variables (first half)
       and the numerical variables (second half).
     
@@ -29,6 +30,11 @@ minimal pre-processing, and access to variable information.
             + robustness control by a parameter
 
     (Note: A categorical variable which has only two unique categories is treated as a numerical variable)
+
+
+
+(*) Factorization: The process of converting each element of a categorical variable into a corresponding positive index.
+
 
 ####################
 ###  Parameters  ###
@@ -66,65 +72,67 @@ minimal pre-processing, and access to variable information.
                                 The categories with a number of appearance below this parameter will be thresholded,
                                 and treated as a new single category.
 
+
 #################
 ###  Methods  ###
 #################
 
-    fit_transform(self, df)
+    fit_transform(df)
              Inputs:   training set of DataFrame
             Returns:   x, (y)
-                       x : The numpy.array containing factorized (*) categorical variables (first half)
+                       x : The numpy.array containing factorized categorical variables (first half)
                            and numerical variables (second half).
                            The variables which have only two unique categories are treated as numerical variables.
                        y : numpy array of objective variable (returned only when objective column exists)
 
-    transform(self, df)
+    transform(df)
              Inputs:   testing set of DataFrame
             Returns:   x, (y)
                        x : numpy array of explanatory variables same as fit_transform()
                        y : numpy array of objective variable (only when objective column exists)
 
-    variables(self)
+    variables()
             Returns:  the list of the name of all variables in order of the output numpy array
     
-    categoricals(self)
+    categoricals()
             Returns:  the list of the name of categorical variables in order of the output numpy array
 
-    numericals(self)
+    numericals()
             Returns:  the list of the name of numerical variables in order of the output numpy array
 
-    name_to_index(self, colname)
+    name_to_index(colname)
              Inputs:   column name of DataFrame
             Returns:   the corresponding column index of numpy array
 
-    index_to_name(self, index)
+    index_to_name(index)
              Inputs:   column index of numpy array
             Returns:   the corresponding column name of DataFrame
 
-    is_numerical(self, index_or_colname)
+    is_numerical(index_or_colname)
              Inputs:   column index of numpy array
             Returns:   the bool indicating whether the variable is treated as a numerical variable or not
 
-    categories(self, index_or_colname)
+    categories(index_or_colname)
              Inputs:   column name of DataFrame, or column index of numpy array
              Return:   the list of unique categories in the variable which index correspond to the factorized values
 
-    category_to_factorized(self, index_or_colname, category_name):
+    category_to_factorized(index_or_colname, category_name):
              Inputs:     index_or_colname : column name of DataFrame, or column index of numpy array
                             category_name : name of the single category
             Returns:   the factorized value
 
-    factorized_to_category(self, index_or_colname, factorized_value):
+    factorized_to_category(index_or_colname, factorized_value):
              Inputs:     index_or_colname : column name of DataFrame, or column index of numpy array
                          factorized_value : factorized value of the single category
             Returns:   the name of the single category
 
-    nuniques(self)
+    nuniques()
             Returns:   the list of the number of unique categories of the categorical variables
 
-    nunique(self, index_or_colname)
+    nunique(index_or_colname)
              Inputs:   column name of DataFrame, or column index of numpy array
             Returns:   the number of unique categories of the categorical variable
+
 
 ####################
 ###  Attributes  ###
