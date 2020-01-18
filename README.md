@@ -123,156 +123,142 @@ original_y_train = y_train * transformer.y_std + transformer.y_mean
 ## Parameters
 
 ####  ```objective_col```
-> *str (optional, default None)*  
-
-> The column name of objective variable.
-> If you specify this, the instance automatically find the column and the output numpy array will be splitted into x (explanatory variables) and y (objective variables).
+-  *str (optional, default None)*  
+  -  The column name of objective variable.
+  If you specify this, the instance automatically find the column and the output numpy array will be splitted into x (explanatory variables) and y (objective variables).
   
 #### ```objective_scaling```
-> *bool (optional, default False)*  
-
-> The flag for scaling objective variable.
+- *bool (optional, default False)* 
+  - The flag for scaling objective variable.
   
 #### ```numerical_scaling```
-> *bool (optional, default False)*  
-
-> The flag for scaling numerical variables.
+- *bool (optional, default False)* 
+  - The flag for scaling numerical variables.
   
 #### ```scaling_robustness_factor```
-> *float in range of [0. 1.] (optional, default 0.)*  
-
-> The parameter to control robustness of scaling operation.
-> Specifying a larger value will make it more robust against outliers.
+- *float in range of [0. 1.] (optional, default 0.)*  
+  - The parameter to control robustness of scaling operation. Specifying a larger value will make it more robust against outliers.
    
 #### ```fillnan```
-> *bool (optional, default True)*  
-
-> The flag to fill missing values (nan, NaN).
-> If True, the numerical nan will be filled with the mean,
-> and the categorical nan will be filled as new category (or most frequent category).
-> If False, the numerical nan will not be filled,
-> and the categorical nan will be filled with -1.
+- *bool (optional, default True)*  
+  - The flag to fill missing values (nan, NaN). If True, the numerical nan will be filled with the mean,
+  and the categorical nan will be filled as new category (or most frequent category).
+  If False, the numerical nan will not be filled,
+  and the categorical nan will be filled with -1.
   
 #### ```fillnan_robustness_factor```
-> *float in range of [0. 1.] (optional, default 0.)*  
-
-> The parameter to control robustness of calculating the filling value to nan.
-> Specifying a larger value will make it more robust against outliers.
+- *float in range of [0. 1.] (optional, default 0.)*  
+  - The parameter to control robustness of calculating the filling value to nan.
+  Specifying a larger value will make it more robust against outliers.
   
 #### ```min_category_count```
-> *integer (optional, default 0)*
-
-> The minimum number of appearance of each category, in each categorical variable.
-> The categories with a number of appearance below this parameter will be thresholded,
-> and treated as a new single category.
+- *integer (optional, default 0)*  
+  - The minimum number of appearance of each category, in each categorical variable.
+  The categories with a number of appearance below this parameter will be thresholded,
+  and treated as a new single category.
   
 
 ## Methods
 
 #### ```fit_transform(df)```
 - *Inputs*: ```df```
-> training set of DataFrame  
+  - training set of DataFrame  
 
 - *Returns*: ```x```, (```y```)
-> ```x``` : The numpy.array containing factorized categorical variables (first half)
-> and numerical variables (second half).
-> The variables which have only two unique categories are treated as numerical variables.  
-
-> ```y``` : numpy array of objective variable (returned only when objective column exists)
-
-> The transformer instance will be fitted by the df.
+  - ```x``` : The numpy.array containing factorized categorical variables (first half)
+  and numerical variables (second half).
+  The variables which have only two unique categories are treated as numerical variables.  
+  - ```y``` : numpy array of objective variable (returned only when objective column exists)
+  - The transformer instance will be fitted by the df.
 
 #### ```transform(df)```
 - *Inputs*: ```df```
-> testing set of DataFrame  
+  - testing set of DataFrame  
 
 - *Returns*:   ```x```, (```y```)
-> ```x``` : numpy array of explanatory variables same as fit_transform()  
-
-> ```y``` : numpy array of objective variable (only when objective column exists)
+  - ```x``` : numpy array of explanatory variables same as fit_transform()  
+  - ```y``` : numpy array of objective variable (only when objective column exists)
 
 #### ```variables()```
-- *Returns*:
-> the list of the name of all variables in order of the output numpy array
+- *Returns*:  
+  -the list of the name of all variables in order of the output numpy array
     
 #### ```categoricals()```
-- *Returns*:
-> the list of the name of categorical variables in order of the output numpy array
+- *Returns*:  
+  - the list of the name of categorical variables in order of the output numpy array
 
 #### ```numericals()```
-- *Returns*:
-> the list of the name of numerical variables in order of the output numpy array
+- *Returns*:  
+  - the list of the name of numerical variables in order of the output numpy array
 
 #### ```name_to_index(colname)```
-- *Inputs*:
-> column name of DataFrame  
+- *Inputs*: ```colname```  
+  - column name of DataFrame  
 
-- *Returns*:
-> the corresponding column index of numpy array
+- *Returns*:  
+  - the corresponding column index of numpy array
 
 #### ```index_to_name(index)```
-- *Inputs*:
-> column index of numpy array  
+- *Inputs*: ```index```  
+  - column index of numpy array  
 
-- *Returns*:
-> the corresponding column name of DataFrame
+- *Returns*:  
+  - the corresponding column name of DataFrame
 
 #### ```is_numerical(index_or_colname)```
-- *Inputs*:
-> column index of numpy array  
+- *Inputs*: ```index_or_colname```
+  - column index of numpy array  
 
 - *Returns*:
-> the bool indicating whether the variable is treated as a numerical variable or not
+  - the bool indicating whether the variable is treated as a numerical variable or not
 
 #### ```categories(index_or_colname)```
-- *Inputs*:
-> column name of DataFrame, or column index of numpy array  
+- *Inputs*: ```index_or_colname```  
+  - column name of DataFrame, or column index of numpy array  
 
-- *Returns*:
-> the list of unique categories in the variable which index correspond to the factorized values
+- *Returns*:  
+  - the list of unique categories in the variable which index correspond to the factorized values
 
 #### ```category_to_factorized(index_or_colname, category_name)```
-- *Inputs*: ```index_or_colname```, ```category_name```
-> ```index_or_colname``` : column name of DataFrame, or column index of numpy array  
+- *Inputs*: ```index_or_colname```, ```category_name```  
+  - ```index_or_colname``` : column name of DataFrame, or column index of numpy array  
+  - ```category_name``` : name of the single category  
 
-> ```category_name``` : name of the single category  
-
-- *Returns*:
-> the factorized value
+- *Returns*:  
+  - the factorized value
 
 #### ```factorized_to_category(index_or_colname, factorized_value)```
-- *Inputs*: ```index_or_colname```, ```factorized_value```
-> ```index_or_colname``` : column name of DataFrame, or column index of numpy array  
+- *Inputs*: ```index_or_colname```, ```factorized_value```  
+  - ```index_or_colname``` : column name of DataFrame, or column index of numpy array  
+  - ```factorized_value``` : factorized value of the single category  
 
-> ```factorized_value``` : factorized value of the single category  
-
-- *Returns*:
-> the name of the single category
+- *Returns*:  
+  - the name of the single category
 
 #### ```nuniques()```
-- *Returns*:
-> the list of the number of unique categories of the categorical variables
+- *Returns*:  
+  - the list of the number of unique categories of the categorical variables
 
 #### ```nunique(index_or_colname)```
-- *Returns*:
-> column name of DataFrame, or column index of numpy array  
+- *Returns*: ```index_or_colname```  
+  - column name of DataFrame, or column index of numpy array  
 
-- *Returns*:
-> the number of unique categories of the categorical variable
+- *Returns*:  
+  - the number of unique categories of the categorical variable
 
 
 ## Attributes
 
 #### ```y_mean```
-> the mean of the objective variable before scaling  
+  - the mean of the objective variable before scaling  
     
 #### ```y_std```
-> the standard deviation of the objective variable before scaling  
+  - the standard deviation of the objective variable before scaling  
     
 #### ```num_categoricals```
-> the number of the categorical variables  
+  - the number of the categorical variables  
     
 #### ```num_numericals```
-> the number of the numerical variables  
+  - the number of the numerical variables  
 
 ***
