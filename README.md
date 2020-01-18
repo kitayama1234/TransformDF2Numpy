@@ -95,7 +95,7 @@ print(transformer.categoricals())   # out: ['animal_type', 'shop_type']
 print(transformer.numericals())     # out: [''weights', 'distance_from_a_station', 'is_a_pedigree']
 
 # variable type
-print(transformer.is_numerical('is_a_pedigree'))   # out: True  (because it's a flag variable with only 2 categories)
+print(transformer.is_numerical('is_a_pedigree'))   # out: True (because it's a flag variable with only 2 categories)
 
 # name-index link
 print(transformer.name_to_index('animal_type'))  # out: 0
