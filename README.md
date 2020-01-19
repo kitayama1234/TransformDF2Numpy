@@ -14,7 +14,7 @@ This returns one-hot-encoded numpy.array and the list of variable names.
 
 - *Quick fitting of a transformer*
   - Transform a training-set of pandas.DataFrame to the numpy.array dataset, and fit the transformer instance.
-    The numpy.array containing the **factorized categorical variables (first half)**
+    The numpy.array contains the **factorized categorical variables (first half)**
     and the **numerical variables (second half)**.　　
 　
  
@@ -168,8 +168,7 @@ Specifying a larger value will make it more robust against outliers.
 #### ```min_category_count```
 - *integer (optional, default 0)*  
 - The minimum number of appearance of each category, in each categorical variable.
-The categories with a number of appearance below this parameter will be thresholded,
-and treated as a new single category.
+A category with a number of occurrences less than this parameter will be thresholded,and treated as a new single category.
   
 
 ## Methods
@@ -221,7 +220,7 @@ and treated as a new single category.
 
 #### ```is_numerical(index_or_colname)```
 - *Inputs*: ```index_or_colname```
-  - column index of numpy array  
+  - column column name of DataFrame, or column index of numpy array  
 
 - *Returns*:
   - the bool indicating whether the variable is treated as a numerical variable or not
@@ -276,3 +275,7 @@ and treated as a new single category.
   - the number of the numerical variables  
 
 ***
+
+# Author
+Masaki Kitayama
+email: kitayama-masaki@ed.tmu.ac.jp
