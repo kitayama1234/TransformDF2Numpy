@@ -277,5 +277,5 @@ A category with a number of occurrences less than this parameter will be thresho
 ***
 
 # Author
-Masaki Kitayama
+Masaki Kitayama  
 email: kitayama-masaki@ed.tmu.ac.jp
