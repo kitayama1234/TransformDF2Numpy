@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
 import pandas as pd
-import transform_df2numpy
-from transform_df2numpy import TransformDF2Numpy, one_hot_encode, NAN_CATEGORY, DROPPED_CATEGORY
-from transform_df2numpy.errors import *
+import df2numpy
+from df2numpy import TransformDF2Numpy, one_hot_encode, NAN_CATEGORY, DROPPED_CATEGORY
+from df2numpy.errors import *
 
 
 df = pd.DataFrame({

@@ -86,7 +86,7 @@ x_test_one_hot = one_hot_encode(transformer, x_test)[0]
 
 
 #############################################
-###  Access to the variables information  ###
+###  Access to the variables information  ###~~~~
 #############################################
 
 # names of the variables in the order
