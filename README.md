@@ -42,6 +42,11 @@ This returns one-hot-encoded numpy.array and the list of varaible names.
 
 > (*) **Factorization**: The process of converting each element of a categorical variable into a corresponding positive index.
 
+## Getting Started
+```
+pip install git+https://github.com/kitayama1234/TransformDF2Numpy
+```
+
 ## Basic Usage
 
 ```python
