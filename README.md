@@ -1,6 +1,6 @@
 ***
-# transform_df2numpy
-A python package: **transform_df2numpy**, containing a class ```TransformDF2Numpy``` and a function ```one_hot_encode```, 
+# df2numpy
+A python package: **tdf2numpy**, containing a class ```TransformDF2Numpy``` and a function ```one_hot_encode```, 
 is a simple and flexible tool for quick transformation from **pandas.DataFrame** to **numpy.array** dataset.  
   
 *TransformDF2Numpy* is a class for fitting a transformer instance by training DataFrame.
@@ -90,27 +90,31 @@ x_test_one_hot = one_hot_encode(transformer, x_test)[0]
 #############################################
 
 # names of the variables in the order
-print(transformer.variables())      # out: ['animal_type', 'shop_type', 'weights', 'distance_from_a_station', 'is_a_pedigree']
+print(transformer.variables())      # out: ['animal_type', 'shop_type', 'weights', 'distance_from_a_station', 'has_a_pedigree']
 print(transformer.categoricals())   # out: ['animal_type', 'shop_type']
-print(transformer.numericals())     # out: [''weights', 'distance_from_a_station', 'is_a_pedigree']
+print(transformer.numericals())     # out: [''weights', 'distance_from_a_station', 'has_a_pedigree']
 
 # variable type
-print(transformer.is_numerical('is_a_pedigree'))   # out: True (because it's a flag variable with only 2 categories)
+print(transformer.is_numerical('has_a_pedigree'))   # out: True (because it's a flag variable with only 2 categories)
 
 # name-index link
 print(transformer.name_to_index('animal_type'))  # out: 0
 print(transformer.index_to_name(0))              # out: 'animal_type'
 
 # categories of a categorical variable
-print(transformer.categories('animal_type'))   # (transformer.categories(0) is also OK.)
+print(transformer.categories('animal_type'))    # out: ['cat', 'bird', 'dog']
+print(transformer.categories(0))                # out: ['cat', 'bird', 'dog']
 
 # category-factorized link
 print(transformer.category_to_factorized('animal_type', 'dog'))  # out: 2.
+print(transformer.category_to_factorized(0, 'dog'))              # out: 2.
+print(transformer.factorized_to_category('animal_type', 2.))     # out: 'dog'
 print(transformer.factorized_to_category(0, 2.))                 # out: 'dog'
 
 # number of unique categories
 print(transformer.nuniques())               # out: [3, 4]
 print(transformer.nunique('animal_type'))   # out: 3
+print(transformer.nunique(0))               # out: 3
 
 # re-scaling of the objective variable
 original_y_train = y_train * transformer.y_std + transformer.y_mean
@@ -118,8 +122,7 @@ original_y_train = y_train * transformer.y_std + transformer.y_mean
 ```
 
 ***
-# TransformDF2Numpy
-The documentation of the class ```transform_df2numpy.TransformDF2Numpy```
+# TransformDF2Numpy Documentation
 
 ## Parameters
 
