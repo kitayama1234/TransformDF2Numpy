@@ -126,7 +126,7 @@ original_y_train = y_train * t.y_std + t.y_mean
 
 ```
 
-## Advance Usage
+## Advanced Usage
 A DNN solution with a technique "Entity Enbedding" [1] for a tabular dataset: https://github.com/kitayama1234/Pytorch-Entity-Embedding-DNN-Regressor
 
 > [1] Guo, Cheng, and Felix Berkhahn. "Entity embeddings of categorical variables." arXiv preprint arXiv:1604.06737 (2016).
