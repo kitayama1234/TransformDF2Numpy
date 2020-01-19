@@ -3,7 +3,7 @@
 A python package: **df2numpy**, containing a class ```TransformDF2Numpy``` and a function ```one_hot_encode```, 
 is a simple and flexible tool for quick transformation from **pandas.DataFrame** to **numpy.array** dataset.  
   
-*TransformDF2Numpy* is a class for fitting a transformer instance by training DataFrame.
+*TransformDF2Numpy* is a class for fitting a transformer instance by a training pandas.DataFrame set.
 This contains some utilities such as **re-transformation of new data**,
 minimal **pre-processing**, and **access to variable information**.  
   
