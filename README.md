@@ -47,7 +47,7 @@ This returns one-hot-encoded numpy.array and the list of varaible names.
 ```python
 import numpy as np
 import pandas as pd
-from transform_df2numpy import TransformDF2Numpy, one_hot_encode
+from df2numpy import TransformDF2Numpy, one_hot_encode
 
 
 #######################
@@ -58,17 +58,17 @@ from transform_df2numpy import TransformDF2Numpy, one_hot_encode
 df_train = pd.read_csv('some_path/train_data.csv')
 
 # initializing a transformer instance
-transformer = TransformDF2Numpy(objective_col='price',
-                                objective_scaling=True,
-                                fillnan=True,
-                                numerical_scaling=True,
-                                min_category_count=3)
+t = TransformDF2Numpy(objective_col='price',
+                      objective_scaling=True,
+                      fillnan=True,
+                      numerical_scaling=True,
+                      min_category_count=3)
 
 # fit a transformer, get the numpy.arrays
-x_train, y_train = transformer.fit_transform(df_train)
+x_train, y_train = t.fit_transform(df_train)
 
 # (one hot encoding)
-x_train_one_hot, variable_names = one_hot_encode(transformer, x_train)
+x_train_one_hot, variable_names = one_hot_encode(t, x_train)
 
 
 ######################
@@ -79,45 +79,45 @@ x_train_one_hot, variable_names = one_hot_encode(transformer, x_train)
 df_test = pd.read_csv('some_path/test_data.csv')
 
 # apply the transformer to test data
-x_test = transformer.transform(df_test)   # The df_test can be transformed whether the objective column is contained or not.
+x_test = t.transform(df_test)   # The df_test can be transformed whether the objective column is contained or not.
 
 # (one hot encoding)
-x_test_one_hot = one_hot_encode(transformer, x_test)[0]
+x_test_one_hot = one_hot_encode(t, x_test)[0]
 
 
 #############################################
-###  Access to the variables information  ###~~~~
+###  Access to the variables information  ###
 #############################################
 
 # names of the variables in the order
-print(transformer.variables())      # out: ['animal_type', 'shop_type', 'weights', 'distance_from_a_station', 'has_a_pedigree']
-print(transformer.categoricals())   # out: ['animal_type', 'shop_type']
-print(transformer.numericals())     # out: [''weights', 'distance_from_a_station', 'has_a_pedigree']
+print(t.variables())      # out: ['animal_type', 'shop_type', 'weights', 'distance_from_a_station', 'has_a_pedigree']
+print(t.categoricals())   # out: ['animal_type', 'shop_type']
+print(t.numericals())     # out: [''weights', 'distance_from_a_station', 'has_a_pedigree']
 
 # variable type
-print(transformer.is_numerical('has_a_pedigree'))   # out: True (because it's a flag variable with only 2 categories)
+print(t.is_numerical('has_a_pedigree'))   # out: True (because it's a flag variable with only 2 categories)
 
 # name-index link
-print(transformer.name_to_index('animal_type'))  # out: 0
-print(transformer.index_to_name(0))              # out: 'animal_type'
+print(t.name_to_index('animal_type'))  # out: 0
+print(t.index_to_name(0))              # out: 'animal_type'
 
 # categories of a categorical variable
-print(transformer.categories('animal_type'))    # out: ['cat', 'bird', 'dog']
-print(transformer.categories(0))                # out: ['cat', 'bird', 'dog']
+print(t.categories('animal_type'))    # out: ['cat', 'bird', 'dog']
+print(t.categories(0))                # out: ['cat', 'bird', 'dog']
 
 # category-factorized link
-print(transformer.category_to_factorized('animal_type', 'dog'))  # out: 2.
-print(transformer.category_to_factorized(0, 'dog'))              # out: 2.
-print(transformer.factorized_to_category('animal_type', 2.))     # out: 'dog'
-print(transformer.factorized_to_category(0, 2.))                 # out: 'dog'
+print(t.category_to_factorized('animal_type', 'dog'))  # out: 2.
+print(t.category_to_factorized(0, 'dog'))              # out: 2.
+print(t.factorized_to_category('animal_type', 2.))     # out: 'dog'
+print(t.factorized_to_category(0, 2.))                 # out: 'dog'
 
 # number of unique categories
-print(transformer.nuniques())               # out: [3, 4]
-print(transformer.nunique('animal_type'))   # out: 3
-print(transformer.nunique(0))               # out: 3
+print(t.nuniques())               # out: [3, 4]
+print(t.nunique('animal_type'))   # out: 3
+print(t.nunique(0))               # out: 3
 
 # re-scaling of the objective variable
-original_y_train = y_train * transformer.y_std + transformer.y_mean
+original_y_train = y_train * t.y_std + t.y_mean
 
 ```
 
