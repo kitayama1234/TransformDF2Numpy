@@ -8,7 +8,7 @@ This contains some utilities such as **re-transformation of new data**,
 minimal **pre-processing**, and **access to variable information**.  
   
 *one_hot_encolde* is a function that takes a instance of TransformDF2Numpy and its output numpy.array.
-This returns one-hot-encoded numpy.array and the list of variaible names.
+This returns one-hot-encoded numpy.array and the list of variable names.
 
 ## Overview
 
