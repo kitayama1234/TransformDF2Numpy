@@ -103,7 +103,7 @@ print(t.numericals())     # out: [''weights', 'distance_from_a_station', 'has_a_
 # variable type
 print(t.is_numerical('has_a_pedigree'))   # out: True (because it's a flag variable with only 2 categories)
 
-# name-index link
+# variable name <-> index link
 print(t.name_to_index('animal_type'))  # out: 0
 print(t.index_to_name(0))              # out: 'animal_type'
 
@@ -111,7 +111,7 @@ print(t.index_to_name(0))              # out: 'animal_type'
 print(t.categories('animal_type'))    # out: ['cat', 'bird', 'dog']
 print(t.categories(0))                # out: ['cat', 'bird', 'dog']
 
-# category-factorized link
+# category <-> factorized value link
 print(t.category_to_factorized('animal_type', 'dog'))  # out: 2.
 print(t.category_to_factorized(0, 'dog'))              # out: 2.
 print(t.factorized_to_category('animal_type', 2.))     # out: 'dog'
@@ -122,7 +122,7 @@ print(t.nuniques())               # out: [3, 4]
 print(t.nunique('animal_type'))   # out: 3
 print(t.nunique(0))               # out: 3
 
-# re-scaling of the objective variable
+# inverse scaling of the objective variable
 original_y_train = y_train * t.y_std + t.y_mean
 
 ```
