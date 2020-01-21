@@ -20,10 +20,11 @@ This returns one-hot-encoded numpy.array and the list of variable names.
  
 - *Utilities of a fitted transformer instance.*
     - Transforming New DataFrame samely as DataFrame used for fitting.
-    - Access to variable information.
-        - linking variable index and name
+        - This helps avoiding data leakage when evaluating a machine learning model, and also helps incorporating the model into a system.
+    - Access to the variables information.
+        - linking variable indices and the variable names
         - variable names (all, categorical, numerical)
-        - linking factorized value and category name
+        - linking factorized values and the category names
         - unique categories of categorical variables　　
 　
   
@@ -69,10 +70,11 @@ t = TransformDF2Numpy(objective_col='price',
                       numerical_scaling=True,
                       min_category_count=3)
 
-# fit a transformer, get the numpy.arrays
+# fit the transformer, and get the numpy.arrays
+# x_train contains the factorized categorical variables (first half) and the numerical variables (second half).
 x_train, y_train = t.fit_transform(df_train)
 
-# (one hot encoding)
+# get the one-hot-encoded numpy.array and its list of the variable names
 x_train_one_hot, variable_names = one_hot_encode(t, x_train)
 
 
@@ -83,10 +85,10 @@ x_train_one_hot, variable_names = one_hot_encode(t, x_train)
 # read data
 df_test = pd.read_csv('some_path/test_data.csv')
 
-# apply the transformer to test data
+# apply the transformer to the test data and get the numpy.array
 x_test = t.transform(df_test)   # The df_test can be transformed whether the objective column is contained or not.
 
-# (one hot encoding)
+# get the one-hot-encoded numpy.array
 x_test_one_hot = one_hot_encode(t, x_test)[0]
 
 
@@ -102,7 +104,7 @@ print(t.numericals())     # out: [''weights', 'distance_from_a_station', 'has_a_
 # variable type
 print(t.is_numerical('has_a_pedigree'))   # out: True (because it's a flag variable with only 2 categories)
 
-# name-index link
+# variable name <-> index link
 print(t.name_to_index('animal_type'))  # out: 0
 print(t.index_to_name(0))              # out: 'animal_type'
 
@@ -110,7 +112,7 @@ print(t.index_to_name(0))              # out: 'animal_type'
 print(t.categories('animal_type'))    # out: ['cat', 'bird', 'dog']
 print(t.categories(0))                # out: ['cat', 'bird', 'dog']
 
-# category-factorized link
+# category <-> factorized value link
 print(t.category_to_factorized('animal_type', 'dog'))  # out: 2.
 print(t.category_to_factorized(0, 'dog'))              # out: 2.
 print(t.factorized_to_category('animal_type', 2.))     # out: 'dog'
@@ -121,7 +123,7 @@ print(t.nuniques())               # out: [3, 4]
 print(t.nunique('animal_type'))   # out: 3
 print(t.nunique(0))               # out: 3
 
-# re-scaling of the objective variable
+# inverse scaling of the objective variable
 original_y_train = y_train * t.y_std + t.y_mean
 
 ```
