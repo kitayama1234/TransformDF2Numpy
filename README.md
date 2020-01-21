@@ -21,10 +21,10 @@ This returns one-hot-encoded numpy.array and the list of variable names.
 - *Utilities of a fitted transformer instance.*
     - Transforming New DataFrame samely as DataFrame used for fitting.
         - This helps avoiding data leakage when evaluating a machine learning model, and also helps incorporating the model into a system.
-    - Access to variable information.
-        - linking variable index and name
+    - Access to the variables information.
+        - linking variable indices and the variable names
         - variable names (all, categorical, numerical)
-        - linking factorized value and category name
+        - linking factorized values and the category names
         - unique categories of categorical variables　　
 　
   
