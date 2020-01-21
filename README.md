@@ -69,10 +69,11 @@ t = TransformDF2Numpy(objective_col='price',
                       numerical_scaling=True,
                       min_category_count=3)
 
-# fit a transformer, get the numpy.arrays
+# fit the transformer, and get the numpy.arrays
+# x_train contains the factorized categorical variables (first half) and the numerical variables (second half).
 x_train, y_train = t.fit_transform(df_train)
 
-# (one hot encoding)
+# get the one-hot-encoded numpy.array and its list of the variable names
 x_train_one_hot, variable_names = one_hot_encode(t, x_train)
 
 
@@ -83,10 +84,10 @@ x_train_one_hot, variable_names = one_hot_encode(t, x_train)
 # read data
 df_test = pd.read_csv('some_path/test_data.csv')
 
-# apply the transformer to test data
+# apply the transformer to the test data and get the numpy.array
 x_test = t.transform(df_test)   # The df_test can be transformed whether the objective column is contained or not.
 
-# (one hot encoding)
+# get the one-hot-encoded numpy.array
 x_test_one_hot = one_hot_encode(t, x_test)[0]
 
 
