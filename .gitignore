@@ -1,9 +1,9 @@
 
-/.idea
+/.idea/
 /aaaa.py
-/venv
-/venv_test
-/tests/__pycache__
-/df2numpy/__pycache__
+/venv/
+/venv_test/
+/tests/__pycache__/
+/df2numpy/__pycache__/
 /df2numpy/.DS_Store
 /.DS_Store
