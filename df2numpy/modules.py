@@ -498,13 +498,13 @@ class CategoryThreshold:
         self.valid_categories = valid_categories_series[valid_categories_series].index
 
         drop_targets = list(set(df[col_name].values) - set(self.valid_categories) - set([np.nan]))
-        df[col_name].replace(drop_targets, DROPPED_CATEGORY, inplace=True)
+        df[col_name] = df[col_name].map(lambda x: DROPPED_CATEGORY if x in drop_targets else x)
         if len(drop_targets) != 0 and logging:
             _message_categories_thresholed(col_name, len(self.valid_categories), len(drop_targets))
 
     def transform(self, df, col_name):
         drop_targets = list(set(df[col_name].values) - set(self.valid_categories) - set([np.nan]))
-        df[col_name].replace(drop_targets, DROPPED_CATEGORY, inplace=True)
+        df[col_name] = df[col_name].map(lambda x: DROPPED_CATEGORY if x in drop_targets else x)
 
 
 class Dropper:
