@@ -1,0 +1,7 @@
+
+.idea
+aaaa.py
+venv
+venv_test
+tests/__pycache__
+df2numpy/__pycache__
