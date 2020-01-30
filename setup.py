@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="df2numpy",
-    version="0.1.0",
+    version="0.1.1",
     description="A simple tool for quick transformation from pandas.DataFrame to numpy.array dataset containing some utilities",
     long_description='./README.md',
     author="Masaki Kitayama",

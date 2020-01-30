@@ -237,36 +237,36 @@ class TestTransformDF2Numpy(unittest.TestCase):
     def test_variables(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         self.assertListEqual(t.variables(), ['A', 'D', 'F', 'B', 'C', 'E'])
 
         t2 = TransformDF2Numpy(min_category_count=2,
                                objective_col="B")
-        x2, y2 = t2.fit_transform(self.df.copy())
+        x2, y2 = t2.fit_transform(self.df)
         self.assertListEqual(t2.variables(), ['A', 'D', 'F', 'C', 'E'])
 
     # TODO: categoricals(self)
     def test_categoricals(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         self.assertListEqual(t.categoricals(), ['A', 'D', 'F'])
 
         t2 = TransformDF2Numpy(min_category_count=2,
                                objective_col="B")
-        x2, y2 = t2.fit_transform(self.df.copy())
+        x2, y2 = t2.fit_transform(self.df)
         self.assertListEqual(t2.categoricals(), ['A', 'D', 'F'])
 
     # TODO: numericals(self)
     def test_numericals(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         self.assertListEqual(t.numericals(), ['B', 'C', 'E'])
 
         t2 = TransformDF2Numpy(min_category_count=2,
                                objective_col="B")
-        x2, y2 = t2.fit_transform(self.df.copy())
+        x2, y2 = t2.fit_transform(self.df)
         self.assertListEqual(t2.numericals(), ['C', 'E'])
 
     # TODO: name_to_index(self, colname)
@@ -274,7 +274,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
     def test_name_to_index(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         for index, name in enumerate(['A', 'D', 'F', 'B', 'C', 'E']):
             self.assertEqual(index, t.name_to_index(name))
         with self.assertRaises(VariableNotExistError):
@@ -284,7 +284,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
 
         t2 = TransformDF2Numpy(min_category_count=2,
                                objective_col="B")
-        x2, y2 = t2.fit_transform(self.df.copy())
+        x2, y2 = t2.fit_transform(self.df)
         for index, name in enumerate(['A', 'D', 'F', 'C', 'E']):
             self.assertEqual(index, t2.name_to_index(name))
         with self.assertRaises(VariableNotExistError):
@@ -296,13 +296,13 @@ class TestTransformDF2Numpy(unittest.TestCase):
     def test_index_to_name(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         for index, name in enumerate(['A', 'D', 'F', 'B', 'C', 'E']):
             self.assertEqual(t.index_to_name(index), name)
 
         t2 = TransformDF2Numpy(min_category_count=2,
                                objective_col="B")
-        x2, y2 = t2.fit_transform(self.df.copy())
+        x2, y2 = t2.fit_transform(self.df)
         for index, name in enumerate(['A', 'D', 'F', 'C', 'E']):
             self.assertEqual(t2.index_to_name(index), name)
 
@@ -312,7 +312,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
     def test_is_numerical(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         for index, name in enumerate(['A', 'D', 'F']):
             self.assertFalse(t.is_numerical(index))
             self.assertFalse(t.is_numerical(name))
@@ -327,7 +327,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
 
         t2 = TransformDF2Numpy(min_category_count=2,
                                objective_col="B")
-        x2, y2 = t2.fit_transform(self.df.copy())
+        x2, y2 = t2.fit_transform(self.df)
         for index, name in enumerate(['A', 'D', 'F']):
             self.assertFalse(t2.is_numerical(index))
             self.assertFalse(t.is_numerical(name))
@@ -372,7 +372,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
     def test_category_to_factorized(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         for factorized, category in enumerate(['Aa', DROPPED_CATEGORY, 'Ac']):
             self.assertTrue(factorized == t.category_to_factorized(0, category))
         for factorized, category in enumerate(['Da', 'Db', 'Dc', NAN_CATEGORY]):
@@ -387,7 +387,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
             t.category_to_factorized("Drop", "x")
 
         t2 = TransformDF2Numpy()
-        x2 = t2.fit_transform(self.df.copy())
+        x2 = t2.fit_transform(self.df)
         for factorized, category in enumerate(['Aa', 'Ab', 'Ac']):
             self.assertTrue(factorized == t2.category_to_factorized(0, category))
 
@@ -396,7 +396,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
     def test_factorized_to_category(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         for factorized, category in enumerate(['Aa', DROPPED_CATEGORY, 'Ac']):
             self.assertTrue(t.factorized_to_category(0, factorized) == category)
         for factorized, category in enumerate(['Da', 'Db', 'Dc', NAN_CATEGORY]):
@@ -409,7 +409,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
             t.factorized_to_category("A", 3)
 
         t2 = TransformDF2Numpy()
-        x2 = t2.fit_transform(self.df.copy())
+        x2 = t2.fit_transform(self.df)
         for factorized, category in enumerate(['Aa', 'Ab', 'Ac']):
             self.assertTrue(t2.factorized_to_category(0, factorized) == category)
 
@@ -417,7 +417,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
     def test_nuniques(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         self.assertListEqual(t.nuniques(), [3, 4, 4])
 
     # TODO: nunique(self, index_or_colname)
@@ -425,7 +425,7 @@ class TestTransformDF2Numpy(unittest.TestCase):
     def test_nunique(self):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
-        x = t.fit_transform(self.df.copy())
+        x = t.fit_transform(self.df)
         self.assertListEqual(t.nuniques(), [3, 4, 4])
 
         correct_uniques = [3, 4, 4]

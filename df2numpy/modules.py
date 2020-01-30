@@ -72,6 +72,9 @@ minimal pre-processing, and access to variable information.
                                 The categories with a number of appearance below this parameter will be thresholded,
                                 and treated as a new single category.
 
+                       copy   : bool (optional, default True)
+                                Set to False to perform inplace the input DataFrame and avoid a copy.
+
 
 #################
 ###  Methods  ###
@@ -170,7 +173,8 @@ class TransformDF2Numpy:
                  scaling_robustness_factor=0.,
                  fillnan=True,
                  fillnan_robustness_factor=0.,
-                 min_category_count=0):
+                 min_category_count=0,
+                 copy=True):
 
         # param for objective variable
         if objective_col is not None:
@@ -194,10 +198,16 @@ class TransformDF2Numpy:
         # param for category-threshold by minimum appearance of each category in each categorical variable
         self.min_category_count = min_category_count
 
-    def fit_transform(self, df):
-        df = df.copy()
+        # param for internal copy.
+        # set to False to perform inplace the input DataFrame and avoid a copy.
+        self.copy = copy
 
-        _start_message_fit_transform() if logging else None
+    def fit_transform(self, df):
+        if self.copy:
+            df = df.copy()
+
+        if logging:
+            _start_message_fit_transform()
 
         if self.objective_col:
             y_is_numeric = pd.api.types.is_numeric_dtype(df[self.objective_col])
@@ -269,12 +279,14 @@ class TransformDF2Numpy:
 
         x = self._df_to_numpy(df)
 
-        _end_message_fit_transform(self.variable_information) if logging else None
+        if logging:
+            _end_message_fit_transform(self.variable_information)
 
         return (x, y) if self.objective_col else x
 
     def transform(self, df):
-        df = df.copy()
+        if self.copy:
+            df = df.copy()
 
         if len(df.columns) != len(self.transforms):
             raise WrongDataFrameConstructionError

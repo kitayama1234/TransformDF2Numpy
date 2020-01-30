@@ -172,7 +172,10 @@ Specifying a larger value will make it more robust against outliers.
 - The minimum number of appearance of each category, in each categorical variable.
 A category with a number of occurrences less than this parameter will be thresholded,and treated as a new single category.
   
-
+#### ```copy```
+- *bool (optional, default True)*  
+- Set to False to perform inplace the input DataFrame and avoid a copy.
+  
 ## Methods
 
 #### ```fit_transform(df)```
