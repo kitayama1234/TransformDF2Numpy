@@ -1,3 +1,13 @@
+class TransformerAlreadyFittedError(ValueError):
+    def __init__(self) -> None:
+        super(ValueError, self).__init__("Transformer already fitted.")
+
+
+class TransformerNotFittedError(ValueError):
+    def __init__(self) -> None:
+        super(ValueError, self).__init__("Transformer not fitted.")
+
+
 class InvalidInputForSpecifyingObjectiveColumnError(ValueError):
     def __init__(self) -> None:
         super(ValueError, self).__init__("objective_col must be specified as str or None")
