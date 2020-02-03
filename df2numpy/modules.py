@@ -202,7 +202,13 @@ class TransformDF2Numpy:
         # set to False to perform inplace the input DataFrame and avoid a copy.
         self.copy = copy
 
+        # internal flags
+        self._fitted = False
+
     def fit_transform(self, df):
+        if self._fitted:
+            raise TransformerAlreadyFittedError
+
         if self.copy:
             df = df.copy()
 
@@ -282,9 +288,14 @@ class TransformDF2Numpy:
         if logging:
             _end_message_fit_transform(self.variable_information)
 
+        self._fitted = True
+
         return (x, y) if self.objective_col else x
 
     def transform(self, df):
+        if not self._fitted:
+            raise TransformerNotFittedError
+
         if self.copy:
             df = df.copy()
 
