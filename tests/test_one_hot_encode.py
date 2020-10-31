@@ -134,7 +134,7 @@ class TestOneHotEncode(unittest.TestCase):
 
         x, y = t.fit_transform(df)
 
-        x_one_hot, var_names = one_hot_encode(t, x, elim_verbos=True)
+        x_one_hot, var_names = one_hot_encode(t, x, elim_verbose=True)
 
         self.assertListEqual(var_names, ['A_Aa', 'A_TransformDF2Numpy_dropped_category', 'D_Da', 'D_Db',
                                          'F_Fa', 'F_Fb', 'F_Fc', 'C', 'E'])

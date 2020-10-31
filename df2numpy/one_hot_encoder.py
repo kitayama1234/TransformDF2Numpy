@@ -3,7 +3,7 @@ from .errors import *
 from .modules import TransformDF2Numpy
 
 
-def one_hot_encode(transformer, numpy_array):
+def one_hot_encode(transformer, numpy_array, elim_verbose=False):
     if type(transformer) != TransformDF2Numpy:
         raise InvalidTransformerError
 
