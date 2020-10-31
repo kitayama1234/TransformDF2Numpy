@@ -9,7 +9,7 @@ from df2numpy.errors import *
 df = pd.DataFrame({
     "A": ["Aa", "Ab", "Ac", "Aa", "Ac", "Aa", "Aa", "Aa"],  # uniques: 3, to_be_thresholded: "Ab"
     "B": [1., -3., 0., 2, 3, 0, -1.3, 0.192],
-    "C": ["Ca", np.nan, "Cc", "Ca", "Cc", "Ca", "Cc", "Cc"],  # uniques: 2, nan: 1
+    "C": ["Ca", np.nan, "Cc", "Ca", "Cc", "Ca", "Cc", "Cc"],  # uniques: 2, nan: 1, (must be numerical)
     "D": ["Da", "Db", "Dc", "Db", "Dc", "Da", np.nan, "Dc"],  # uniques: 3, nan: 1
     "E": [1., -3., np.nan, 2, np.nan, 0, -16.9, 20],
     "Drop": ["x", "x", "x", "x", "x", "x", "x", "x"],  # must be dropped
@@ -140,6 +140,10 @@ class TestOneHotEncode(unittest.TestCase):
                                          'F_Fa', 'F_Fb', 'F_Fc', 'C', 'E'])
 
         self.assertTrue(x_one_hot.shape == (8, 9))
+
+        x_one_hot_verbose = one_hot_encode(t, x)
+
+        self.assertTrue((x_one_hot, x_one_hot_verbose[:, [0,1,3,4,6,7,8,10,11]]).all())
 
 
 
