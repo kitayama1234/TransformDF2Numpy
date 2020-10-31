@@ -127,6 +127,20 @@ class TestOneHotEncode(unittest.TestCase):
 
         self.assertListEqual(list(x_one_hot[6, 3:6]), [0., 0., 0.])
 
+    def test_one_hot_encode_eliminate_verbose_feature(self):
+        t = TransformDF2Numpy(min_category_count=2,
+                              fillnan=False,
+                              objective_col="B")
+
+        x, y = t.fit_transform(df)
+
+        x_one_hot, var_names = one_hot_encode(t, x, elim_verbos=True)
+
+        self.assertListEqual(var_names, ['A_Aa', 'A_TransformDF2Numpy_dropped_category', 'D_Da', 'D_Db',
+                                         'F_Fa', 'F_Fb', 'F_Fc', 'C', 'E'])
+
+        self.assertTrue(x_one_hot.shape == (8, 9))
+
 
 
 
