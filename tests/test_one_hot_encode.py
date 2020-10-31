@@ -141,9 +141,8 @@ class TestOneHotEncode(unittest.TestCase):
 
         self.assertTrue(x_one_hot.shape == (8, 9))
 
-        x_one_hot_verbose = one_hot_encode(t, x)
-
-        self.assertTrue((x_one_hot, x_one_hot_verbose[:, [0,1,3,4,6,7,8,10,11]]).all())
+        x_one_hot_verbose, _ = one_hot_encode(t, x)
+        self.assertTrue(np.alltrue(x_one_hot[:, 0:-2] == x_one_hot_verbose[:, [0,1,3,4,6,7,8]]))
 
 
 

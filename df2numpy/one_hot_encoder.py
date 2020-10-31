@@ -23,8 +23,15 @@ def one_hot_encode(transformer, numpy_array, elim_verbose=False):
     # one hot creation loop
     start_index = 0
     names = []
+    if elim_verbose:
+        verbose_idx = []
+
     for category_index, var_name in enumerate(transformer.categoricals()):
         end_index = start_index + transformer.nunique(category_index)
+
+        if elim_verbose:
+            verbose_idx.append(end_index-1)
+
         # one hot encoding
         out[:, start_index:end_index] \
             = np.identity(transformer.nunique(category_index))[list(numpy_array[:, category_index].astype(np.int))]
@@ -48,6 +55,10 @@ def one_hot_encode(transformer, numpy_array, elim_verbose=False):
 
     out[:, end_index:] = numpy_array[:, transformer.num_categoricals:]
     var_names = names + transformer.numericals()
+
+    if elim_verbose:
+        out = np.delete(out, verbose_idx, axis=1)
+        var_names = [name for idx, name in enumerate(var_names) if idx not in verbose_idx]
 
     return out, var_names
 
