@@ -243,11 +243,13 @@ class TransformDF2Numpy:
         self.transforms = []
         categorical_transform_index = []
         numerical_transform_index = []
+        num_rows = len(df)
         for i, col in enumerate(df.columns):
             num_uniques = df[col].nunique()
             is_numeric = pd.api.types.is_numeric_dtype(df[col])
 
-            if (col == self.objective_col) or (num_uniques == 1):
+            if (col == self.objective_col) or (num_uniques == 1) or \
+                    (not is_numeric and num_uniques == num_rows):
                 trans = Dropper()
                 trans.fit_transform(col, self.objective_col)
                 self.transforms.append(trans)
