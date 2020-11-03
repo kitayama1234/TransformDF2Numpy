@@ -340,15 +340,14 @@ class TransformDF2Numpy:
 
     def is_numerical(self, index_or_colname):
         trans = self._get_transform(index_or_colname)
-        if type(trans) == Factorizer and not trans.ct.all_thresholded:
+        if type(trans) == Factorizer:
             return False
         else:
             return True
 
     def categories(self, index_or_colname):
         trans = self._get_transform(index_or_colname)
-        if (type(trans) == Factorizer and not trans.ct.all_thresholded) or \
-                type(trans) == BinaryFactorizer:
+        if type(trans) == Factorizer or type(trans) == BinaryFactorizer:
             return trans.categories
         else:
             raise HasNoDictionaryError
@@ -358,7 +357,7 @@ class TransformDF2Numpy:
         categories = self.categories(index_or_colname)
         if category_name not in categories:
             raise CategoryNotExistError(category_name)
-        if type(trans) == Factorizer and not trans.ct.all_thresholded:
+        if type(trans) == Factorizer:
             return float(np.where(categories == category_name)[0][0])
         elif type(trans) == BinaryFactorizer:
             categories = self.categories(index_or_colname)
@@ -371,7 +370,7 @@ class TransformDF2Numpy:
         trans = self._get_transform(index_or_colname)
         categories = self.categories(index_or_colname)
 
-        if type(trans) == Factorizer and not trans.ct.all_thresholded:
+        if type(trans) == Factorizer:
             return _factorized_to_category(factorized_value, factorized_value, categories)
 
         elif type(trans) == BinaryFactorizer:
@@ -390,7 +389,7 @@ class TransformDF2Numpy:
     def nunique(self, index_or_colname=None):
         if index_or_colname is not None:
             trans = self._get_transform(index_or_colname)
-            if type(trans) == Factorizer and not trans.ct.all_thresholded:
+            if type(trans) == Factorizer:
                 return trans.num_uniques
             elif type(trans) == BinaryFactorizer:
                 return 2
