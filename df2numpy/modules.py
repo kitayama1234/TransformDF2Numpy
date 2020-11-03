@@ -258,7 +258,8 @@ class TransformDF2Numpy:
                 trans = Factorizer(self.min_category_count, self.fillnan)
                 trans.fit_transform(df, col, self.variable_information)
                 self.transforms.append(trans)
-                categorical_transform_index.append(i)
+                if not trans.ct.all_thresholded:
+                    categorical_transform_index.append(i)
 
             elif (num_uniques == 2) and (not is_numeric):
                 trans = BinaryFactorizer(self.numerical_scaling, self.scaling_robustness_factor,
@@ -301,9 +302,6 @@ class TransformDF2Numpy:
         if self.copy:
             df = df.copy()
 
-        if len(df.columns) != len(self.transforms):
-            raise WrongDataFrameConstructionError
-
         if self.objective_col in df.columns:
             y_exist = True
             y = df[self.objective_col].values.copy()
@@ -312,8 +310,12 @@ class TransformDF2Numpy:
         else:
             y_exist = False
 
-        for i, col in enumerate(df.columns):
-            self.transforms[i].transform(df, col)
+        idx_transform = 0
+        for col in df.columns:
+            if not y_exist and self.transforms[idx_transform].col_name == self.objective_col:
+                idx_transform += 1
+            self.transforms[idx_transform].transform(df, col)
+            idx_transform += 1
 
         x = self._df_to_numpy(df)
 
@@ -338,14 +340,15 @@ class TransformDF2Numpy:
 
     def is_numerical(self, index_or_colname):
         trans = self._get_transform(index_or_colname)
-        if type(trans) == Factorizer:
+        if type(trans) == Factorizer and not trans.ct.all_thresholded:
             return False
         else:
             return True
 
     def categories(self, index_or_colname):
         trans = self._get_transform(index_or_colname)
-        if type(trans) in [Factorizer, BinaryFactorizer]:
+        if (type(trans) == Factorizer and not trans.ct.all_thresholded) or \
+                type(trans) == BinaryFactorizer:
             return trans.categories
         else:
             raise HasNoDictionaryError
@@ -355,7 +358,7 @@ class TransformDF2Numpy:
         categories = self.categories(index_or_colname)
         if category_name not in categories:
             raise CategoryNotExistError(category_name)
-        if type(trans) == Factorizer:
+        if type(trans) == Factorizer and not trans.ct.all_thresholded:
             return float(np.where(categories == category_name)[0][0])
         elif type(trans) == BinaryFactorizer:
             categories = self.categories(index_or_colname)
@@ -368,7 +371,7 @@ class TransformDF2Numpy:
         trans = self._get_transform(index_or_colname)
         categories = self.categories(index_or_colname)
 
-        if type(trans) == Factorizer:
+        if type(trans) == Factorizer and not trans.ct.all_thresholded:
             return _factorized_to_category(factorized_value, factorized_value, categories)
 
         elif type(trans) == BinaryFactorizer:
@@ -387,7 +390,7 @@ class TransformDF2Numpy:
     def nunique(self, index_or_colname=None):
         if index_or_colname is not None:
             trans = self._get_transform(index_or_colname)
-            if type(trans) == Factorizer:
+            if type(trans) == Factorizer and not trans.ct.all_thresholded:
                 return trans.num_uniques
             elif type(trans) == BinaryFactorizer:
                 return 2
@@ -529,7 +532,8 @@ class CategoryThreshold:
         if len(self.valid_categories) == 0:
             self.all_thresholded = True
             if logging:
-                warnings.warn("All categories in column '%s' were thresholded. This column will be dropped.")
+                message = "All categories in column '%s' were thresholded. This column will be dropped." % col_name
+                warnings.warn(message)
 
     def transform(self, df, col_name):
         drop_targets = list(set(df[col_name].values) - set(self.valid_categories) - set([np.nan]))
