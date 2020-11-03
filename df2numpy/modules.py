@@ -275,7 +275,7 @@ class TransformDF2Numpy:
                 numerical_transform_index.append(i)
 
             else:
-                message = "something wrong with column: " + col
+                message = "debug: something wrong with column: " + col
                 raise Exception(message)
 
         self.variable_information["variables"] = self.variable_information["categorical_variables"]\
@@ -430,7 +430,7 @@ def _end_message_fit_transform(info):
 
 
 def _message_variable_dropped(col_name):
-    print("Variable Dropped because of containing only one unique value: (column: '%s')" % col_name)
+    print("Garbage variable Dropped: (column: '%s')" % col_name)
 
 
 def _message_categories_thresholed(col_name, num_valids, num_dropped):
@@ -515,7 +515,7 @@ def _mean_std_for_scaling(values, scaling_robustness_factor, col_name):
 
 class CategoryThreshold:
     def __init__(self):
-        pass
+        self.all_thresholded = False
 
     def fit_transform(self, df, col_name, min_count):
         val_cnt = df[col_name].value_counts()
@@ -526,6 +526,10 @@ class CategoryThreshold:
         df[col_name] = df[col_name].map(lambda x: DROPPED_CATEGORY if x in drop_targets else x)
         if len(drop_targets) != 0 and logging:
             _message_categories_thresholed(col_name, len(self.valid_categories), len(drop_targets))
+        if len(self.valid_categories) == 0:
+            self.all_thresholded = True
+            if logging:
+                warnings.warn("All categories in column '%s' were thresholded. This column will be dropped.")
 
     def transform(self, df, col_name):
         drop_targets = list(set(df[col_name].values) - set(self.valid_categories) - set([np.nan]))
@@ -557,39 +561,41 @@ class Factorizer:
         self.ct = CategoryThreshold()
         self.ct.fit_transform(df, col_name, min_count=self.min_category_count)
 
-        if self.fillnan_flag:
-            self.categories, self.nan_value = _fit_factorize_fillnan_true(df, col_name)
-        else:
-            self.categories = _fit_factorize_fillnan_false(df, col_name)
+        if not self.ct.all_thresholded:
+            if self.fillnan_flag:
+                self.categories, self.nan_value = _fit_factorize_fillnan_true(df, col_name)
+            else:
+                self.categories = _fit_factorize_fillnan_false(df, col_name)
 
-        variable_info["categorical_variables"].append(col_name)
-        self.num_uniques = len(self.categories)
-        variable_info["categorical_uniques"].append(self.num_uniques)
+            variable_info["categorical_variables"].append(col_name)
+            self.num_uniques = len(self.categories)
+            variable_info["categorical_uniques"].append(self.num_uniques)
 
-        # starting to create params used for an external one-hot-encoding function
-        category_counts = df[col_name].value_counts()
-        if -1 in category_counts.index.values:
-            category_counts.drop(-1, axis=0, inplace=True)
-        category_counts = category_counts.sort_index().values
+            # starting to create params used for an external one-hot-encoding function
+            category_counts = df[col_name].value_counts()
+            if -1 in category_counts.index.values:
+                category_counts.drop(-1, axis=0, inplace=True)
+            category_counts = category_counts.sort_index().values
 
-        # means of one-hot-vectors
-        self.categories_one_hot_means = category_counts / category_counts.sum()
+            # means of one-hot-vectors
+            self.categories_one_hot_means = category_counts / category_counts.sum()
 
-        # standard deviations of one-hot-vectors
-        self.categories_one_hot_stds = np.sqrt(
-            self.categories_one_hot_means * (1 - self.categories_one_hot_means) ** 2 +
-            (1 - self.categories_one_hot_means) * self.categories_one_hot_means ** 2
-        )
+            # standard deviations of one-hot-vectors
+            self.categories_one_hot_stds = np.sqrt(
+                self.categories_one_hot_means * (1 - self.categories_one_hot_means) ** 2 +
+                (1 - self.categories_one_hot_means) * self.categories_one_hot_means ** 2
+            )
 
     def transform(self, df, col_name):
         if col_name != self.col_name:
             raise WrongDataFrameConstructionError
-        
-        self.ct.transform(df, col_name)
-        if self.fillnan_flag:
-            df[col_name].fillna(self.nan_value, inplace=True)
 
-        df[col_name] = self.categories.get_indexer(df[col_name])
+        if not self.ct.all_thresholded:
+            self.ct.transform(df, col_name)
+            if self.fillnan_flag:
+                df[col_name].fillna(self.nan_value, inplace=True)
+
+            df[col_name] = self.categories.get_indexer(df[col_name])
 
 
 class BinaryFactorizer:
