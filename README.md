@@ -49,7 +49,7 @@ pip install git+https://github.com/kitayama1234/TransformDF2Numpy
 ```
 
 ## Basic Usage
-See demo.ipynb
+See [demo.ipynb](https://github.com/kitayama1234/TransformDF2Numpy/blob/master/demo.ipynb)
 
 ## Advanced Usage
 A DNN solution with a technique "Entity Enbedding" [1] for a tabular dataset: https://github.com/kitayama1234/Pytorch-Entity-Embedding-DNN-Regressor
