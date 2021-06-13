@@ -238,12 +238,12 @@ class TestTransformDF2Numpy(unittest.TestCase):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
         x = t.fit_transform(self.df)
-        self.assertListEqual(t.variables(), ['A', 'D', 'F', 'B', 'C', 'E'])
+        self.assertListEqual(t.variables(), ['A', 'D', 'F', 'B', 'C_Cc', 'E'])
 
         t2 = TransformDF2Numpy(min_category_count=2,
                                objective_col="B")
         x2, y2 = t2.fit_transform(self.df)
-        self.assertListEqual(t2.variables(), ['A', 'D', 'F', 'C', 'E'])
+        self.assertListEqual(t2.variables(), ['A', 'D', 'F', 'C_Cc', 'E'])
 
     # TODO: categoricals(self)
     def test_categoricals(self):
@@ -262,12 +262,12 @@ class TestTransformDF2Numpy(unittest.TestCase):
         t = TransformDF2Numpy(min_category_count=2,
                               numerical_scaling=True)
         x = t.fit_transform(self.df)
-        self.assertListEqual(t.numericals(), ['B', 'C', 'E'])
+        self.assertListEqual(t.numericals(), ['B', 'C_Cc', 'E'])
 
         t2 = TransformDF2Numpy(min_category_count=2,
                                objective_col="B")
         x2, y2 = t2.fit_transform(self.df)
-        self.assertListEqual(t2.numericals(), ['C', 'E'])
+        self.assertListEqual(t2.numericals(), ['C_Cc', 'E'])
 
     # TODO: name_to_index(self, colname)
     # VariableNotExistError
