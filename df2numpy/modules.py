@@ -322,13 +322,29 @@ class TransformDF2Numpy:
         return (x, y) if y_exist else x
 
     def variables(self):
-        return self.variable_information["variables"]
+        var_names = self.variable_information["variables"]
+        out = []
+        for name in var_names:
+            trans = self._get_transform(name)
+            if type(trans) == BinaryFactorizer:
+                out.append(name + "_" + self.categories(name)[-1])
+            else:
+                out.append(name)
+        return out
 
     def categoricals(self):
         return self.variable_information["categorical_variables"]
 
     def numericals(self):
-        return self.variable_information["numerical_variables"]
+        var_names = self.variable_information["numerical_variables"]
+        out = []
+        for name in var_names:
+            trans = self._get_transform(name)
+            if type(trans) == BinaryFactorizer:
+                out.append(name + "_" + self.categories(name)[-1])
+            else:
+                out.append(name)
+        return out
 
     def name_to_index(self, colname):
         if colname not in self.variable_information["variables"]:
@@ -613,6 +629,7 @@ class BinaryFactorizer:
         self.col_name = col_name
 
         df[col_name], self.categories = df[col_name].factorize()
+        variable_info["numerical_variables"].append(col_name)
 
         # fill nan
         nan_count = (df[col_name].values == -1).sum()
@@ -631,8 +648,6 @@ class BinaryFactorizer:
                                                         self.scaling_robustness_factor,
                                                         col_name)
             df[col_name] = (df[col_name].values - self.mean) / self.std
-
-        variable_info["numerical_variables"].append(col_name)
 
     def transform(self, df, col_name):
         if col_name != self.col_name:

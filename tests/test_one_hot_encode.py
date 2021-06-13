@@ -105,7 +105,7 @@ class TestOneHotEncode(unittest.TestCase):
 
         self.assertListEqual(var_names, ['A_Aa', 'A_TransformDF2Numpy_dropped_category', 'A_Ac', 'D_Da',
                                          'D_Db', 'D_Dc', 'D_TransformDF2Numpy_NaN_category', 'F_Fa', 'F_Fb',
-                                         'F_Fc', 'F_Fd', 'C', 'E'])
+                                         'F_Fc', 'F_Fd', 'C_Cc', 'E'])
 
         for i, name in enumerate(var_names):
             self.assertTrue(-0.00001 < x_one_hot[:, i].mean() < 0.00001)
@@ -121,7 +121,7 @@ class TestOneHotEncode(unittest.TestCase):
         x_one_hot, var_names = one_hot_encode(t, x)
 
         self.assertListEqual(var_names, ['A_Aa', 'A_TransformDF2Numpy_dropped_category', 'A_Ac', 'D_Da', 'D_Db',
-                                         'D_Dc', 'F_Fa', 'F_Fb', 'F_Fc', 'F_Fd', 'C', 'E'])
+                                         'D_Dc', 'F_Fa', 'F_Fb', 'F_Fc', 'F_Fd', 'C_Cc', 'E'])
 
         self.assertTrue(x_one_hot.shape == (8, 12))
 
@@ -137,7 +137,7 @@ class TestOneHotEncode(unittest.TestCase):
         x_one_hot, var_names = one_hot_encode(t, x, elim_verbose=True)
 
         self.assertListEqual(var_names, ['A_Aa', 'A_TransformDF2Numpy_dropped_category', 'D_Da', 'D_Db',
-                                         'F_Fa', 'F_Fb', 'F_Fc', 'C', 'E'])
+                                         'F_Fa', 'F_Fb', 'F_Fc', 'C_Cc', 'E'])
 
         self.assertTrue(x_one_hot.shape == (8, 9))
 
@@ -145,7 +145,8 @@ class TestOneHotEncode(unittest.TestCase):
         self.assertTrue(np.alltrue(x_one_hot[:, 0:-2] == x_one_hot_verbose[:, [0,1,3,4,6,7,8]]))
 
 
-
+if __name__ == '__main__':
+    unittest.main()
 
 
 
